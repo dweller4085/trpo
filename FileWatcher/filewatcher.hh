@@ -4,16 +4,40 @@
 #include <QObject>
 #include <QVector>
 #include <QString>
+#include <QTimer>
 #include "common.hh"
 
-class FileWatcher : QObject { Q_OBJECT
+class FileWatcher : public QObject { Q_OBJECT
 public:
-    FileWatcher ();
-    explicit FileWatcher (QObject *parent) {}
-    explicit FileWatcher (QVector<QString> && files_to_watch) : files_to_watch {move (files_to_watch)} {}
-    FileWatcher (FileWatcher && fw) : files_to_watch {move (fw.files_to_watch)} {}
+    enum class ChangeType : usize {
+        SizeChanged,
+        Created,
+        Deleted
+    };
 
-    QVector<QString> files_to_watch;
+    FileWatcher ();
+    explicit FileWatcher (QObject * parent);
+    explicit FileWatcher (QVector<QString> && files_to_watch);
+    ~FileWatcher ();
+
+    void startWatch (u32 interval_ms);
+    void stopWatch ();
+
+signals:
+    void fileChanged (QString const & filepath, ChangeType change, i64 size_change);
+
+private slots:
+    void checkFiles ();
+
+private:
+    struct File {
+        QString path;
+        u64 size;
+        bool exits;
+    };
+
+    QList<File> watched_files;
+    QTimer timer;
 };
 
 #endif // FILEWATCHER_HH

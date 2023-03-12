@@ -1,15 +1,17 @@
 #include <QCoreApplication>
 #include <cstdio>
-#include "common.hh"
 #include "filewatcher.hh"
 #include "util.hh"
+#include "common.hh"
 
 fn main (i32 argc, char ** argv) -> i32 {
     QCoreApplication app {argc, argv};
 
     let file_names = read_args (argv);
-    let file_watcher = FileWatcher {move (file_names)};
+    FileWatcher file_watcher {move (file_names)};
+    QObject::connect(&file_watcher, &FileWatcher::fileChanged, &report_file_change);
 
+    file_watcher.startWatch (1000);
 
     ret app.exec();
 }
