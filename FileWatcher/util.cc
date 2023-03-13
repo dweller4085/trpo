@@ -14,9 +14,9 @@ static QDebug operator << (QDebug debug, FileWatcher::ChangeType change) {
     QDebugStateSaver saver(debug);
     
     static char const * const names [] {
-        "Deleted",
+        "Size Changed",
         "Created",
-        "Size Changed"
+        "Deleted"
     };
     
     debug.nospace() << names [usize (change)];
