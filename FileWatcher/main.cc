@@ -7,8 +7,8 @@
 fn main (i32 argc, char ** argv) -> i32 {
     QCoreApplication app {argc, argv};
 
-    let file_names = read_args (argv);
-    FileWatcher file_watcher {move (file_names)};
+    let const file_names = read_args (argv);
+    FileWatcher file_watcher {file_names};
     QObject::connect(&file_watcher, &FileWatcher::fileChanged, &report_file_change);
 
     file_watcher.startWatch (1000);

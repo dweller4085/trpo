@@ -10,8 +10,8 @@ fn read_args (char const * const * argv) -> QVector<QString> {
     ret vec;
 }
 
-static QDebug operator << (QDebug debug, FileWatcher::ChangeType change) {
-    QDebugStateSaver saver(debug);
+fn static operator << (QDebug debug, FileWatcher::ChangeType change) -> QDebug {
+    QDebugStateSaver saver {debug};
     
     static char const * const names [] {
         "Size Changed",
@@ -21,7 +21,7 @@ static QDebug operator << (QDebug debug, FileWatcher::ChangeType change) {
     
     debug.nospace() << names [usize (change)];
 
-    return debug;
+    ret debug;
 }
 
 fn report_file_change (QString const & filepath, FileWatcher::ChangeType change, i64 size_change) -> void {

@@ -9,16 +9,16 @@ FileWatcher::FileWatcher (QObject *parent) : QObject {parent}, timer {this} {
     self.timer.setInterval (1000);
 }
 
-FileWatcher::FileWatcher (QVector<QString> && files_to_watch) : FileWatcher {} {
+FileWatcher::FileWatcher (QVector<QString> const & files_to_watch) : FileWatcher {} {
     u32 filecount = files_to_watch.length();
 
     qInfo() << "A FileWatcher was created with" << filecount << "files to watch:\n";
 
-    for (let & filepath : files_to_watch) {
+    for (let const & filepath : files_to_watch) {
         QFileInfo const file_info {filepath};
 
         self.watched_files.append (File {
-            move (filepath),
+            filepath,
             (u64) file_info.size(),
             file_info.exists()
         });
@@ -39,20 +39,21 @@ void FileWatcher::startWatch (u32 interval_ms) {
 }
 
 void FileWatcher::stopWatch () {
-    qInfo () << "Stopped the file watcher.\n";
+    qInfo () << "Stopped watch.\n";
     self.timer.stop ();
 }
 
 void FileWatcher::checkFiles () {
     for (let & file : self.watched_files) {
         QFileInfo const file_info {file.path};
+        let size_diff = file_info.size() - file.size;
 
         if (file.exists && !file_info.exists()) {
-            emit FileWatcher::fileChanged (file_info.filePath(), FileWatcher::ChangeType::Deleted, file_info.size() - file.size);
+            emit FileWatcher::fileChanged (file_info.filePath(), FileWatcher::ChangeType::Deleted    , size_diff);
         } else if (!file.exists && file_info.exists()) {
-            emit FileWatcher::fileChanged (file_info.filePath(), FileWatcher::ChangeType::Created, file_info.size() - file.size);
+            emit FileWatcher::fileChanged (file_info.filePath(), FileWatcher::ChangeType::Created    , size_diff);
         } else if (file.size != (u64) file_info.size()) {
-            emit FileWatcher::fileChanged (file_info.filePath(), FileWatcher::ChangeType::SizeChanged, file_info.size () - file.size);
+            emit FileWatcher::fileChanged (file_info.filePath(), FileWatcher::ChangeType::SizeChanged, size_diff);
         }
         
         file.exists = file_info.exists ();

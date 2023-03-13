@@ -17,7 +17,7 @@ public:
 
     FileWatcher ();
     explicit FileWatcher (QObject * parent);
-    explicit FileWatcher (QVector<QString> && files_to_watch);
+    explicit FileWatcher (QVector<QString> const & files_to_watch);
     ~FileWatcher ();
 
     void startWatch (u32 interval_ms);
