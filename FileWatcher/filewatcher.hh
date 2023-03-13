@@ -33,7 +33,7 @@ private:
     struct File {
         QString path;
         u64 size;
-        bool exits;
+        bool exists;
     };
 
     QList<File> watched_files;

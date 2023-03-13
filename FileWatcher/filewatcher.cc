@@ -15,7 +15,7 @@ FileWatcher::FileWatcher (QVector<QString> && files_to_watch) : FileWatcher {} {
         QFileInfo const file_info {filepath};
         self.watched_files.append (File {
             move (filepath),
-            file_info.size(),
+            (u64) file_info.size(),
             file_info.exists()
         });
     }
@@ -37,14 +37,14 @@ void FileWatcher::stopWatch () {
 
 void FileWatcher::checkFiles () {
     for (let & file : self.watched_files) {
-        FileInfo const file_info {file.path};
+        QFileInfo const file_info {file.path};
 
         if (file.exists && !file_info.exists()) {
-            emit FileWatcher::fileChanged(file.filePath(), FileWatcher::ChangeType::Deleted, file_info.size() - file.size);
+            emit FileWatcher::fileChanged(file_info.filePath(), FileWatcher::ChangeType::Deleted, file_info.size() - file.size);
         } else if (!file.exists && file_info.exists()) {
-            emit FileWatcher::fileChanged(file.filePath(), FileWatcher::ChangeType::Created, file_info.size() - file.size);
-        } else if (file.size != file_info.size()) {
-            emit FileWatcher::fileChanged(file.filePath(), FileWatcher::ChangeType::SizeChanged, file_info.size () - file.size);
+            emit FileWatcher::fileChanged(file_info.filePath(), FileWatcher::ChangeType::Created, file_info.size() - file.size);
+        } else if (file.size != (u64) file_info.size()) {
+            emit FileWatcher::fileChanged(file_info.filePath(), FileWatcher::ChangeType::SizeChanged, file_info.size () - file.size);
         }
         
         file.exists = file_info.exists ();
