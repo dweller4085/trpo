@@ -4,7 +4,7 @@
 
 FileWatcher::FileWatcher () : FileWatcher {nullptr} {}
 
-FileWatcher::FileWatcher (QObject *parent) : QObject {parent}, timer {this} {
+FileWatcher::FileWatcher (QObject * parent) : QObject {parent}, timer {this} {
     QObject::connect (&self.timer, &QTimer::timeout, this, &FileWatcher::checkFiles);
     self.timer.setInterval (1000);
 }

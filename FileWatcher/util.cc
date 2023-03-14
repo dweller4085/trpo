@@ -24,6 +24,6 @@ fn static operator << (QDebug debug, FileWatcher::ChangeType change) -> QDebug {
     ret debug;
 }
 
-fn report_file_change (QString const & filepath, FileWatcher::ChangeType change, i64 size_change) -> void {
-    qInfo () << "File changed: " << filepath << "\nChange:" << change << "\nSize change: " << size_change << "\n";
+fn report_file_change (QString const & filepath, FileWatcher::ChangeType change, i64 size_diff) -> nil {
+    qInfo () << "File changed: " << filepath << "\nChange:" << change << "\nSize change: " << size_diff << "\n";
 }

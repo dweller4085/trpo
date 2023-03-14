@@ -24,7 +24,7 @@ public:
     void stopWatch ();
 
 signals:
-    void fileChanged (QString const & filepath, ChangeType change, i64 size_change);
+    void fileChanged (QString const & filepath, ChangeType change, i64 size_diff);
 
 private slots:
     void checkFiles ();
