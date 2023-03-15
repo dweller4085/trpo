@@ -4,6 +4,6 @@
 #include "common.hh"
 
 fn read_args (char const * const * argv) -> QVector<QString>;
-fn report_file_change (QString const & filepath, FileWatcher::ChangeType change, i64 size_diff) -> nil;
+fn report_file_change (QString const & filepath, FileWatcher::ChangeType change, i64 size_diff) -> void;
 
 #endif // UTIL_HH

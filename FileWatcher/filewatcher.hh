@@ -12,21 +12,21 @@ public:
     enum class ChangeType : usize {
         SizeChanged,
         Created,
-        Deleted
+        Deleted,
+        Unchanged
     };
 
     FileWatcher ();
     explicit FileWatcher (QObject * parent);
     explicit FileWatcher (QVector<QString> const & files_to_watch);
-    ~FileWatcher ();
+    ~FileWatcher () = default;
 
-    void startWatch (u32 interval_ms);
-    void stopWatch ();
+    // TODO add getters setters shit
 
 signals:
     void fileChanged (QString const & filepath, ChangeType change, i64 size_diff);
 
-private slots:
+public slots:
     void checkFiles ();
 
 private:
@@ -37,7 +37,6 @@ private:
     };
 
     QList<File> watched_files;
-    QTimer timer;
 };
 
 #endif // FILEWATCHER_HH

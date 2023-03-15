@@ -6,12 +6,15 @@
 
 fn main (i32 argc, char ** argv) -> i32 {
     QCoreApplication app {argc, argv};
+    QTimer timer;
+    timer.setInterval(1000);
 
-    let const file_names = read_args (argv);
-    FileWatcher file_watcher {file_names};
-    QObject::connect(&file_watcher, &FileWatcher::fileChanged, &report_file_change);
+    FileWatcher file_watcher {read_args (argv)};
 
-    file_watcher.startWatch (1000);
+    QObject::connect (&file_watcher, &FileWatcher::fileChanged, &report_file_change);
+    QObject::connect (&timer, &QTimer::timeout, [&] {file_watcher.checkFiles();});
 
-    ret app.exec();
+    timer.start();
+
+    return app.exec();
 }
