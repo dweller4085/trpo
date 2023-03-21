@@ -1,8 +1,8 @@
 #include <QtDebug>
 #include "util.hh"
 
-fn read_args (char const * const * argv) -> QVector<QString> {
-    let vec = QVector<QString> {};
+fn read_args (char const * const * argv) -> QList<QString> {
+    let vec = QList<QString> {};
     while (*(++argv) != nullptr) {
         vec.push_back(QString {*argv});
     }
@@ -26,5 +26,11 @@ fn static operator << (QDebug debug, FileWatcher::ChangeType change) -> QDebug {
 }
 
 fn report_file_change (QString const & filepath, FileWatcher::ChangeType change, i64 size_diff) -> void {
-    qInfo () << "File changed: " << filepath << "\nChange:" << change << "\nSize change: " << size_diff << "\n";
+    qInfo().nospace() <<
+        "[FileWatcher] Registered a change!" <<
+        "\nFile: " << filepath <<
+        "\nChange: " << change <<
+        "\nSize change: " << (size_diff > 0 ? "+" : "") << size_diff <<
+        "\n"
+    ;
 }

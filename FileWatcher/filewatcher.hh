@@ -2,7 +2,7 @@
 #define FILEWATCHER_HH
 
 #include <QObject>
-#include <QVector>
+#include <QList>
 #include <QString>
 #include <QTimer>
 #include "common.hh"
@@ -21,10 +21,12 @@ public:
     explicit FileWatcher (QVector<QString> const & files_to_watch);
     ~FileWatcher () = default;
 
-    // TODO add getters setters shit
+    QList<QString> getWatchedFiles () const;
+    void setWatchedFiles (QList<QString> const & files);
 
 signals:
     void fileChanged (QString const & filepath, ChangeType change, i64 size_diff);
+    void logMessage (QString const & str);
 
 public slots:
     void checkFiles ();
