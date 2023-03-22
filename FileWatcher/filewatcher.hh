@@ -15,14 +15,19 @@ public:
         Unchanged
     };
 
-    FileWatcher ();
-    explicit FileWatcher (QObject * parent);
-    explicit FileWatcher (QVector<QString> const & files_to_watch);
-    ~FileWatcher () = default;
+    FileWatcher (FileWatcher const &) = delete;
+    FileWatcher (FileWatcher &&) = delete;
+
+    static FileWatcher & instance ();
 
     QList<QString> getWatchedFiles () const;
     void setWatchedFiles (QList<QString> files);
     void addFile (QString filename);
+
+private:
+    FileWatcher ();
+    explicit FileWatcher (QObject * parent);
+    ~FileWatcher () = default;
 
 signals:
     void fileChanged (QString const & filepath, ChangeType change, i64 size_diff);

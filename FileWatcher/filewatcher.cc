@@ -6,6 +6,11 @@ FileWatcher::FileWatcher () : FileWatcher {nullptr} {}
 
 FileWatcher::FileWatcher (QObject * parent) : QObject {parent}, watched_files {} {}
 
+FileWatcher & FileWatcher::instance () {
+    static FileWatcher instance {};
+    return instance;
+}
+
 void FileWatcher::checkFiles () {
     for (let & file : self.watched_files) {
         QFileInfo const file_info {file.path};
