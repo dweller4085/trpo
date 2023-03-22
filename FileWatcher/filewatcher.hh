@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QList>
 #include <QString>
-#include <QTimer>
 #include "common.hh"
 
 class FileWatcher : public QObject { Q_OBJECT
@@ -22,11 +21,12 @@ public:
     ~FileWatcher () = default;
 
     QList<QString> getWatchedFiles () const;
-    void setWatchedFiles (QList<QString> const & files);
+    void setWatchedFiles (QList<QString> files);
+    void addFile (QString filename);
 
 signals:
     void fileChanged (QString const & filepath, ChangeType change, i64 size_diff);
-    void logMessage (QString const & str);
+    void logMessage (QString str);
 
 public slots:
     void checkFiles ();

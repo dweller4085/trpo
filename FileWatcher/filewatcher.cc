@@ -37,8 +37,23 @@ QList<QString> FileWatcher::getWatchedFiles () const {
     return list;
 }
 
-void FileWatcher::setWatchedFiles (QList<QString> const & files_to_watch) {
-    let message = QString {} + (self.watched_files.isEmpty() ? "Set to " : "Reset to ") + QString::number(files_to_watch.length()) + " files to watch.";
+void FileWatcher::addFile (QString filename) {
+    let const file_info = QFileInfo {filename};
+    let file = File {
+        file_info.filePath(),
+        (u64) file_info.size(),
+        file_info.exists()
+    };
+
+    let message = QString {} + "Added a file to watch: \"" + file.path + "\" " + "[" + QString::number(file.size) + "] " + (file.exists ? "Exists." : "Does not exist.") + "\n";
+
+    self.watched_files.push_back(move(file));
+
+    emit FileWatcher::logMessage(move(message));
+}
+
+void FileWatcher::setWatchedFiles (QList<QString> files_to_watch) {
+    let message = QString {} + (self.watched_files.isEmpty() ? "Set" : "Reset") + " to watch " + QString::number(files_to_watch.length()) + " files.";
 
     self.watched_files.clear();
 
@@ -52,10 +67,10 @@ void FileWatcher::setWatchedFiles (QList<QString> const & files_to_watch) {
             file_info.exists()
         };
 
-        message += "\n[" + QString::number(++i) + "] " + file.path + " [" + QString::number(file.size) + "] " + (file.exists ? "Exists." : "Does not exist.");
+        message += "\n" + QString::number(++i) + ". " + file.path + " [" + QString::number(file.size) + "] " + (file.exists ? "Exists." : "Does not exist.");
 
         self.watched_files.append (move (file));
     }
 
-    emit FileWatcher::logMessage(message + "\n");
+    emit FileWatcher::logMessage(move(message + "\n"));
 }
