@@ -37,13 +37,12 @@ public slots:
     void checkFiles ();
 
 private:
-    struct File {
-        QString path;
+    struct FileStatus__ {
         u64 size;
         bool exists;
     };
 
-    QList<File> watched_files;
+    QMap<QString, FileStatus__> watched_files;
 };
 
 #endif // FILEWATCHER_HH

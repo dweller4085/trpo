@@ -12,22 +12,22 @@ FileWatcher & FileWatcher::instance () {
 }
 
 void FileWatcher::checkFiles () {
-    for (let & file : self.watched_files) {
-        QFileInfo const file_info {file.path};
+    for (let kv = self.watched_files.begin(); kv != self.watched_files.end(); kv++) {
+        QFileInfo const file_info {kv.key()};
         let change_type = FileWatcher::ChangeType::Unchanged;
 
-        if (file.exists && !file_info.exists()) {
+        if (kv.value().exists && !file_info.exists()) {
             change_type = FileWatcher::ChangeType::Deleted;
-        } else if (!file.exists && file_info.exists()) {
+        } else if (!kv.value().exists && file_info.exists()) {
             change_type = FileWatcher::ChangeType::Created;
-        } else if (file.size != (u64) file_info.size()) {
+        } else if (kv.value().size != (u64) file_info.size()) {
             change_type = FileWatcher::ChangeType::SizeChanged;
         }
 
         if (change_type != FileWatcher::ChangeType::Unchanged) {
-            emit FileWatcher::fileChanged (file.path, change_type, file_info.size() - file.size);
-            file.exists = file_info.exists();
-            file.size = file_info.size();
+            emit FileWatcher::fileChanged (kv.key(), change_type, file_info.size() - kv.value().size);
+            kv.value().exists = file_info.exists();
+            kv.value().size = file_info.size();
         }
     }
 }
@@ -35,8 +35,8 @@ void FileWatcher::checkFiles () {
 QList<QString> FileWatcher::getWatchedFiles () const {
     let list = QList<QString> {};
 
-    for (auto const & file : self.watched_files) {
-        list.push_back (file.path);
+    for (auto i = self.watched_files.keyBegin(); i != self.watched_files.keyEnd(); i++) {
+        list.push_back (*i);
     }
 
     return list;
@@ -44,15 +44,20 @@ QList<QString> FileWatcher::getWatchedFiles () const {
 
 void FileWatcher::addFile (QString filename) {
     let const file_info = QFileInfo {filename};
-    let file = File {
-        file_info.filePath(),
+
+    if (watched_files.contains(file_info.absoluteFilePath())) {
+        emit FileWatcher::logMessage(QString {} + file_info.absoluteFilePath() + " is already being watched.\n");
+        return;
+    }
+
+    let file_status = FileStatus__ {
         (u64) file_info.size(),
         file_info.exists()
     };
 
-    let message = QString {} + "Added a file to watch: \"" + file.path + "\" " + "[" + QString::number(file.size) + "] " + (file.exists ? "Exists." : "Does not exist.") + "\n";
+    let message = QString {} + "Added a file to watch: \"" + file_info.absoluteFilePath() + "\" " + "[" + QString::number(file_status.size) + "] " + (file_status.exists ? "Exists." : "Does not exist.") + "\n";
 
-    self.watched_files.push_back(move(file));
+    self.watched_files.insert(file_info.absoluteFilePath(), file_status);
 
     emit FileWatcher::logMessage(move(message));
 }
@@ -66,15 +71,16 @@ void FileWatcher::setWatchedFiles (QList<QString> files_to_watch) {
     for (auto const & filepath : files_to_watch) {
         QFileInfo const file_info {filepath};
 
-        let file = File {
-            file_info.filePath(),
-            (u64) file_info.size(),
-            file_info.exists()
-        };
-
-        message += "\n" + QString::number(++i) + ". " + file.path + " [" + QString::number(file.size) + "] " + (file.exists ? "Exists." : "Does not exist.");
-
-        self.watched_files.append (move (file));
+        if (!watched_files.contains(file_info.absoluteFilePath())) {
+            let file_status = FileStatus__ {
+                (u64) file_info.size(),
+                file_info.exists()
+            };
+            message += "\n" + QString::number(++i) + ". " + file_info.absoluteFilePath() + " [" + QString::number(file_status.size) + "] " + (file_status.exists ? "Exists." : "Does not exist.");
+            self.watched_files.insert (file_info.absoluteFilePath(), file_status);
+        } else {
+            message += "\n" + QString::number(++i) + ". " + file_info.absoluteFilePath() + " is already being watched.";
+        }
     }
 
     emit FileWatcher::logMessage(move(message + "\n"));

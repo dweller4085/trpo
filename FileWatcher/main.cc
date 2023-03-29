@@ -5,6 +5,8 @@
 #include "util.hh"
 #include "common.hh"
 
+#include <QFileInfo>
+
 fn main (i32 argc, char ** argv) -> i32 {
     QCoreApplication app {argc, argv};
     QTimer timer {};
