@@ -50,7 +50,7 @@ void FileWatcher::addFile (QString filename) {
         return;
     }
 
-    let file_status = FileStatus__ {
+    let file_status = FileStatus {
         (u64) file_info.size(),
         file_info.exists()
     };
@@ -72,7 +72,7 @@ void FileWatcher::setWatchedFiles (QList<QString> files_to_watch) {
         QFileInfo const file_info {filepath};
 
         if (!watched_files.contains(file_info.absoluteFilePath())) {
-            let file_status = FileStatus__ {
+            let file_status = FileStatus {
                 (u64) file_info.size(),
                 file_info.exists()
             };

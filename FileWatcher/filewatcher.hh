@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QMap>
 #include <QString>
 #include "common.hh"
 
@@ -29,20 +30,19 @@ private:
     explicit FileWatcher (QObject * parent);
     ~FileWatcher () = default;
 
+    struct FileStatus {
+        u64 size;
+        bool exists;
+    };
+
+    QMap<QString, FileStatus> watched_files;
+
 signals:
     void fileChanged (QString const & filepath, ChangeType change, i64 size_diff);
     void logMessage (QString str);
 
 public slots:
     void checkFiles ();
-
-private:
-    struct FileStatus__ {
-        u64 size;
-        bool exists;
-    };
-
-    QMap<QString, FileStatus__> watched_files;
 };
 
 #endif // FILEWATCHER_HH

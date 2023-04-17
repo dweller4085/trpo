@@ -7,7 +7,7 @@
 
 #include <QFileInfo>
 
-fn main (i32 argc, char ** argv) -> i32 {
+int main (int argc, char ** argv) {
     QCoreApplication app {argc, argv};
     QTimer timer {};
     timer.setInterval(1000);
@@ -21,6 +21,8 @@ fn main (i32 argc, char ** argv) -> i32 {
     file_watcher.setWatchedFiles(read_args(argv));
     file_watcher.addFile(QString {"C:\\lib\\MKB\\include\\MKB\\aliases.h"});
     file_watcher.setWatchedFiles({});
+    file_watcher.addFile(QString {"C:\\lib\\MKB\\include\\MKB\\aliases.h"});
+    file_watcher.addFile(QString {"C:\\lib\\MKB\\include\\MKB\\aliases.h"});
 
     timer.start();
     return app.exec();
