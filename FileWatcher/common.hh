@@ -21,12 +21,9 @@ typedef float            f32            ;
 typedef double           f64            ;
 
 #ifdef __cplusplus
-    #define fn auto
     #define let auto
     #define self (*this)
-
     #include <utility>
-    using std::move;
 #endif
 
 #endif // __MKB_ALIASES_H

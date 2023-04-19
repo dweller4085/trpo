@@ -38,7 +38,7 @@ private:
     QMap<QString, FileStatus> watched_files;
 
 signals:
-    void fileChanged (QString const & filepath, ChangeType change, i64 size_diff);
+    void fileChanged (QString const & filepath, FileWatcher::ChangeType change, i64 size_diff);
     void logMessage (QString str);
 
 public slots:

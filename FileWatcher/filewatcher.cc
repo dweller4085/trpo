@@ -1,5 +1,4 @@
 #include <QFileInfo>
-#include <Qdebug>
 #include "filewatcher.hh"
 
 FileWatcher::FileWatcher () : FileWatcher {nullptr} {}
@@ -59,7 +58,7 @@ void FileWatcher::addFile (QString filename) {
 
     self.watched_files.insert(file_info.absoluteFilePath(), file_status);
 
-    emit FileWatcher::logMessage(move(message));
+    emit FileWatcher::logMessage(std::move(message));
 }
 
 void FileWatcher::setWatchedFiles (QList<QString> files_to_watch) {
@@ -83,5 +82,5 @@ void FileWatcher::setWatchedFiles (QList<QString> files_to_watch) {
         }
     }
 
-    emit FileWatcher::logMessage(move(message + "\n"));
+    emit FileWatcher::logMessage(message + "\n");
 }
