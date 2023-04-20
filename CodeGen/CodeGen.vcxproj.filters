@@ -18,9 +18,21 @@
     <ClCompile Include="main.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="cc.hh">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cs.hh">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="java.hh">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="common.hh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ml.hh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
