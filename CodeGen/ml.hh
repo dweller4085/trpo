@@ -4,13 +4,10 @@
 
 namespace ml {
     struct Construct {
-        // unsure
-        // virtual ~Construct() = 0;
+        virtual ~Construct() = default;
         virtual operator std::string () const = 0;
     };
 
-    struct Item : Construct {};
-    struct Statement : Construct {};
     constexpr auto identSize = 4;
 
     /*
@@ -23,7 +20,7 @@ namespace ml {
     };
     */
 
-    struct ClassDecl : Item {
+    struct ClassDecl : Construct {
         enum class AccessSpecifier {
             Public,
             Private,
@@ -69,22 +66,22 @@ namespace ml {
             }*/
         };
 
-        void addStatement (shared_ptr<Statement> statement) {
+        void addStatement (shared_ptr<Construct> statement) {
             self.body.push_back(statement);
         }
     
     protected:
         Signature sig;
-        std::vector<shared_ptr<Statement>> body;
+        std::vector<shared_ptr<Construct>> body;
     };
 
-    struct PrintStatement : Statement {
+    struct PrintStatement : Construct {
     protected:
         std::string text;
     };
 
     struct Program {
-        void addItem (shared_ptr<Item> item) {
+        void addItem (shared_ptr<Construct> item) {
             self.body.push_back(item);
         }
 
@@ -98,7 +95,7 @@ namespace ml {
         }
     
     protected:
-        std::vector<shared_ptr<Item>> body;
+        std::vector<shared_ptr<Construct>> body;
     };
 
     struct Factory {

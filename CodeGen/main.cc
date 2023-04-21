@@ -29,7 +29,7 @@ std::string composeProgram(ml::Factory && factory) {
 
     let methodC = factory.createMethodDefDecl (
         ml::MethodDefDecl::Signature {
-            "methodB",
+            "methodC",
         {},
         "int",
         (int) Specifier::Const
@@ -44,13 +44,12 @@ std::string composeProgram(ml::Factory && factory) {
     classA->addItem(ml::ClassDecl::AccessMarkedItem {ml::ClassDecl::AccessSpecifier::Protected, methodA});
     classA->addItem(ml::ClassDecl::AccessMarkedItem {ml::ClassDecl::AccessSpecifier::Public, methodB});
     classA->addItem(ml::ClassDecl::AccessMarkedItem {ml::ClassDecl::AccessSpecifier::Private, methodC});
+    classA->addItem(ml::ClassDecl::AccessMarkedItem {ml::ClassDecl::AccessSpecifier::Public, classB});
 
     program.addItem(classA);
-    program.addItem(classB);
 
     return (std::string) program;
 }
-
 
 
 #include "cc.hh"
@@ -60,8 +59,8 @@ std::string composeProgram(ml::Factory && factory) {
 int main (int argc, char ** argv) {
 
     std::cout << "~~~~~~~~~~~~~~~~ C++ ~~~~~~~~~~~~~~~~\n" << composeProgram(cc::Factory {}) << "\n\n";
-    //std::cout << "C#:\n" << composeProgram(cs::Factory {}) << "\n\n";
-    //std::cout << "Java:\n" << composeProgram(java::Factory {}) << "\n\n";
+    std::cout << "~~~~~~~~~~~~~~~~ C# ~~~~~~~~~~~~~~~~\n" << composeProgram(cs::Factory {}) << "\n\n";
+    std::cout << "~~~~~~~~~~~~~~~~ Java ~~~~~~~~~~~~~~~~\n" << composeProgram(java::Factory {}) << "\n\n";
 
     return {0};
 }

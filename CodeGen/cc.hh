@@ -26,23 +26,22 @@ namespace cc {
             let protectedZone = std::string {"protected:\n"};
 
             for (auto const & [access, statement] : ml::ClassDecl::body) {
-                
                 switch (access) {
                     case ml::ClassDecl::AccessSpecifier::Public: {
-                        publicZone += ident ((std::string) *statement) + "\n";
+                        publicZone += ident ((std::string) *statement) + "\n\n";
                     } break;
                     case ml::ClassDecl::AccessSpecifier::Private: {
-                        privateZone += ident ((std::string) *statement) + "\n";
+                        privateZone += ident ((std::string) *statement) + "\n\n";
                     } break;
                     case ml::ClassDecl::AccessSpecifier::Protected: {
-                        protectedZone += ident ((std::string) *statement) + "\n";
+                        protectedZone += ident ((std::string) *statement) + "\n\n";
                     } break;
                 }
             }
 
             classDecl += publicZone + privateZone + protectedZone;
 
-            return classDecl + "}";
+            return classDecl + "};";
         }
     };
 
