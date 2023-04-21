@@ -53,37 +53,43 @@ namespace cc {
         virtual operator std::string () const override {
             let methodDefDecl = std::string {} + sig.returnType + " " + sig.name;
             
-            let argList = std::string {"("};
-            if (!sig.args.empty()) {
-                for (int i = 0; i < sig.args.size() - 1; i += 1) {
-                    argList += sig.args[i] + ", ";
-                } argList += sig.args.back();
-            } argList += ")";
-            
-            methodDefDecl += argList;
+            /* Construct the argument list. */ {
+                let argList = std::string {"("};
+                if (!sig.args.empty()) {
+                    for (int i = 0; i < sig.args.size() - 1; i += 1) {
+                        argList += sig.args[i] + ", ";
+                    } argList += sig.args.back();
+                } argList += ")";
 
-            if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Static) {
-                methodDefDecl = "static " + methodDefDecl;
-            }
-            else if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Virtual) {
-                methodDefDecl = "virtual " + methodDefDecl;
+                methodDefDecl += argList;
             }
 
-            if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Const) {
-                methodDefDecl += " const";
-            }
-
-
-            if (!body.empty()) {
-                methodDefDecl += " {\n";
-                for (auto const statement : body) {
-                    methodDefDecl += ident ((std::string) *statement) + "\n";
+            /* Sprinkle in the specifiers. */ {
+                if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Static) {
+                    methodDefDecl = "static " + methodDefDecl;
                 }
-                
-                methodDefDecl += "}";
+                else if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Virtual) {
+                    methodDefDecl = "virtual " + methodDefDecl;
+                }
 
-            } else {
-                methodDefDecl += " {}";
+                if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Const) {
+                    methodDefDecl += " const";
+                }
+            }
+
+            /* Add the statements to the method's body. */ {
+                if (!body.empty()) {
+                    methodDefDecl += " {\n";
+                    for (auto const statement : body) {
+                        methodDefDecl += ident ((std::string) *statement) + "\n";
+                    }
+
+                    methodDefDecl += "}";
+
+                }
+                else {
+                    methodDefDecl += " {}";
+                }
             }
 
             return methodDefDecl;

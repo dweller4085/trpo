@@ -25,6 +25,7 @@ namespace ml {
             Public,
             Private,
             Protected,
+            __count,
         };
 
         using AccessMarkedItem = std::pair<AccessSpecifier, shared_ptr<Construct>>;
@@ -91,7 +92,7 @@ namespace ml {
                 program += (std::string)*item + "\n\n";
             }
 
-            return program;
+            return std::move (program);
         }
     
     protected:

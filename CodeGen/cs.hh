@@ -20,7 +20,7 @@ namespace cs {
         virtual operator std::string () const override {
             let classDecl = std::string {"class " + ml::ClassDecl::name + " {\n"};
 
-            static char const * accessSpecName [3];
+            static char const * accessSpecName [(int) ml::ClassDecl::AccessSpecifier::__count];
             accessSpecName[(int) ml::ClassDecl::AccessSpecifier::Public] = "public";
             accessSpecName[(int) ml::ClassDecl::AccessSpecifier::Private] = "private";
             accessSpecName[(int) ml::ClassDecl::AccessSpecifier::Protected] = "protected";
@@ -40,38 +40,42 @@ namespace cs {
 
         virtual operator std::string () const override {
             let methodDefDecl = std::string {} + sig.returnType + " " + sig.name;
-
-            let argList = std::string {"("};
-            if (!sig.args.empty()) {
-                for (int i = 0; i < sig.args.size() - 1; i += 1) {
-                    argList += sig.args[i] + ", ";
-                } argList += sig.args.back();
-            } argList += ")";
-
-            methodDefDecl += argList;
-
-            if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Static) {
-                methodDefDecl = "static " + methodDefDecl;
+            
+            /* Construct the argument list. */ {
+                let argList = std::string {"("};
+                if (!sig.args.empty()) {
+                    for (int i = 0; i < sig.args.size() - 1; i += 1) {
+                        argList += sig.args[i] + ", ";
+                    } argList += sig.args.back();
+                } argList += ")";
+                
+                methodDefDecl += argList;
             }
-            else if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Virtual) {
-                methodDefDecl = "virtual " + methodDefDecl;
-            }
-
-            // there are is such thing as const methods in C#
-
-            if (!body.empty()) {
-                methodDefDecl += " {\n";
-                for (auto const statement : body) {
-                    methodDefDecl += ident ((std::string) *statement) + "\n";
+            
+            /* Sprinkle in the specifiers. */ {
+                if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Static) {
+                    methodDefDecl = "static " + methodDefDecl;
                 }
-
-                methodDefDecl += "}";
-
-            }
-            else {
-                methodDefDecl += " {}";
+                else if (sig.specifiers & (int) ml::MethodDefDecl::Specifier::Virtual) {
+                    methodDefDecl = "virtual " + methodDefDecl;
+                }
             }
 
+            /* Add the statements to the method's body. */ {
+                if (!body.empty()) {
+                    methodDefDecl += " {\n";
+                    for (auto const statement : body) {
+                        methodDefDecl += ident ((std::string) *statement) + "\n";
+                    }
+
+                    methodDefDecl += "}";
+
+                }
+                else {
+                    methodDefDecl += " {}";
+                }
+            }
+            
             return methodDefDecl;
         }
     };
