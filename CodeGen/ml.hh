@@ -10,16 +10,6 @@ namespace ml {
 
     constexpr auto identSize = 4;
 
-    /*
-    struct Type : Construct {
-        enum {
-            Int,
-            Void,
-            String,
-        };
-    };
-    */
-
     struct ClassDecl : Construct {
         enum class AccessSpecifier {
             Public,
@@ -50,21 +40,7 @@ namespace ml {
             std::string name;
             std::vector<std::string> args;
             std::string returnType;
-            int specifiers;
-            /*
-            Signature (std::string name, std::vector<std::string> args, std::string returnType, int specifiers) :
-                name {name},
-                args {args},
-                returnType {returnType},
-                specifiers {specifiers}
-            {
-                if (
-                    specifiers & (int) Specifier::Static &&
-                    ((specifiers & (int) Specifier::Virtual) || (specifiers & (int) Specifier::Const))
-                ) {
-                    throw std::invalid_argument {"The Static specififer is orthogonal to all other method specifiers."};
-                }
-            }*/
+            int specifiers {};
         };
 
         void addStatement (shared_ptr<Construct> statement) {

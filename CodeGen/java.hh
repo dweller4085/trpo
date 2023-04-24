@@ -18,7 +18,7 @@ namespace java {
         }
 
         virtual operator std::string () const override {
-            let classDecl = std::string {"public class " + ml::ClassDecl::name + " {\n"};
+            let classDecl = std::string {"class " + ml::ClassDecl::name + " {\n"};
 
             static char const * accessSpecName[3];
             accessSpecName[(int) ml::ClassDecl::AccessSpecifier::Public] = "public";
