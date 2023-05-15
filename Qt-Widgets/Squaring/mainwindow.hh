@@ -1,22 +1,35 @@
 #ifndef MAINWINDOW_HH
 #define MAINWINDOW_HH
 
-#include <QMainWindow>
+#include <QObject>
+#include <QtGui>
+#include <QTextCodec>
+#include <QWidget>
+#include <QFrame>
+#include <QLabel>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QMessageBox>
 
-namespace Ui {
-class MainWindow;
-}
-
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
+class MainWindow : public QWidget { Q_OBJECT
+    QTextCodec * codec;
+    QFrame * frame;
+    QLabel * inputLabel;
+    QLabel * outputLabel;
+    QLineEdit * inputEdit;
+    QLineEdit * outputEdit;
+    QPushButton * nextButton;
+    QPushButton * exitButton;
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
-    ~MainWindow();
+    MainWindow(QWidget * parent);
+    MainWindow() : MainWindow {nullptr} {}
 
-private:
-    Ui::MainWindow *ui;
+public slots:
+    void reset();
+    void square();
 };
 
 #endif // MAINWINDOW_HH
