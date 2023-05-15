@@ -16,7 +16,9 @@ INCLUDEPATH += "C:\lib\MKB\include"
 
 SOURCES += \
         main.cc \
-        mainwindow.cc
+        mainwindow.cc \
+    counter.cc
 
 HEADERS += \
-        mainwindow.hh
+        mainwindow.hh \
+    counter.hh
