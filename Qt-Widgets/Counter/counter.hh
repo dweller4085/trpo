@@ -9,24 +9,19 @@
 #include <MKB/aliases.h>
 
 class Counter : public QLineEdit { Q_OBJECT
-    s32 i {0};
+    s32 counter;
+    s32 tickInterval;
 
 public:
-    Counter(QWidget * parent);
+    Counter(s32 counter, s32 tickInterval, QWidget * parent);
+    Counter(QWidget * parent): Counter {0, 1, parent} {}
     Counter(): Counter {nullptr} {}
 
 signals:
-    void tick_signal();
+    void tick();
 
 public slots:
-    void add_one() {
-        QString str=text();
-        int r=str.toInt();
-        if (r!=0 && r%5 ==0) emit tick_signal();
-        r++;
-        str.setNum(r);
-        setText(str);
-    }
+    void increment();
 };
 
 #endif // COUNTER_HH

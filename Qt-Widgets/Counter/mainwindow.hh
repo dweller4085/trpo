@@ -12,12 +12,12 @@
 
 class MainWindow : public QWidget { Q_OBJECT
     QTextCodec * codec;
-    QLabel * label1;
-    QLabel * label2;
-    Counter * edit1;
-    Counter * edit2;
-    QPushButton * calcbutton;
-    QPushButton * exitbutton;
+    struct LabeledCounter {
+        QLabel * label;
+        Counter * counter;
+    } onesCounter, fivesCounter;
+    QPushButton * incrementButton;
+    QPushButton * exitButton;
 
 public:
     MainWindow(QWidget * parent);

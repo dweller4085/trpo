@@ -4,31 +4,38 @@
 
 MainWindow::MainWindow(QWidget * parent):
     QWidget {parent},
-    codec {QTextCodec::codecForName("UTF-8")}
+    codec {QTextCodec::codecForName("UTF-8")},
+    onesCounter {
+        new QLabel {codec->toUnicode("Cчет по 1"), this},
+        new Counter {0, 5, this}
+    },
+    fivesCounter {
+        new QLabel {codec->toUnicode("Cчет по 5"), this},
+        new Counter {this}
+    },
+    incrementButton {new QPushButton {"+1", this}},
+    exitButton {new QPushButton {codec->toUnicode("Выход"), this}}
 {
     this->setWindowTitle(codec->toUnicode("Счетчик"));
-    label1 = new QLabel(codec->toUnicode("Cчет по 1"),this);
-    label2 = new QLabel(codec->toUnicode("Cчет по 5"),this);
-    edit1 = new Counter(this);
-    edit2 = new Counter(this);
-    calcbutton=new QPushButton("+1",this);
-    exitbutton=new QPushButton(codec->toUnicode("Выход"),this);
-    QHBoxLayout *layout1 = new QHBoxLayout();
-    layout1->addWidget(label1);
-    layout1->addWidget(label2);
-    QHBoxLayout *layout2 = new QHBoxLayout();
-    layout2->addWidget(edit1);
-    layout2->addWidget(edit2);
-    QHBoxLayout *layout3 = new QHBoxLayout();
-    layout3->addWidget(calcbutton);
-    layout3->addWidget(exitbutton);
-    QVBoxLayout *layout4 = new QVBoxLayout(this);
-    layout4->addLayout(layout1);
-    layout4->addLayout(layout2);
-    layout4->addLayout(layout3);
 
-    connect(calcbutton, SIGNAL(clicked(bool)), edit1, SLOT(add_one()));
-    connect(edit1, SIGNAL(tick_signal()), edit2, SLOT(add_one()));
-    connect(exitbutton, SIGNAL(clicked(bool)), this, SLOT(close()));
+    QHBoxLayout * lables = new QHBoxLayout();
+    lables->addWidget(onesCounter.label);
+    lables->addWidget(fivesCounter.label);
+
+    QHBoxLayout * edits = new QHBoxLayout();
+    edits->addWidget(onesCounter.counter);
+    edits->addWidget(fivesCounter.counter);
+
+    QHBoxLayout * buttons = new QHBoxLayout();
+    buttons->addWidget(incrementButton);
+    buttons->addWidget(exitButton);
+
+    QVBoxLayout * mainLayout = new QVBoxLayout {this};
+    mainLayout->addLayout(lables);
+    mainLayout->addLayout(edits);
+    mainLayout->addLayout(buttons);
+
+    connect(incrementButton, &QPushButton::clicked, onesCounter.counter, &Counter::increment);
+    connect(onesCounter.counter, &Counter::tick, fivesCounter.counter, &Counter::increment);
+    connect(exitButton, &QPushButton::clicked, this, &QWidget::close);
 }
-
