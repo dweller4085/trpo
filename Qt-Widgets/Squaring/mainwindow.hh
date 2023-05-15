@@ -24,7 +24,7 @@ class MainWindow : public QWidget { Q_OBJECT
     QPushButton * exitButton;
 
 public:
-    MainWindow(QWidget * parent);
+    explicit MainWindow(QWidget * parent);
     MainWindow(): MainWindow {nullptr} {}
 
 public slots:

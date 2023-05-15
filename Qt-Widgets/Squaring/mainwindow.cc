@@ -1,17 +1,17 @@
 #include "mainwindow.hh"
 
 MainWindow::MainWindow(QWidget * parent):
-    QWidget {parent},
-    codec {QTextCodec::codecForName("UTF-8")},
-    frame {new QFrame {this}},
-    inputLabel {new QLabel {this}},
+    QWidget     {parent},
+    codec       {QTextCodec::codecForName("UTF-8")},
+    frame       {new QFrame {this}},
+    inputLabel  {new QLabel {this}},
     outputLabel {new QLabel {this}},
-    inputEdit {new QLineEdit {this}},
-    outputEdit {new QLineEdit {this}},
-    nextButton {new QPushButton {this}},
-    exitButton {new QPushButton {this}}
+    inputEdit   {new QLineEdit {this}},
+    outputEdit  {new QLineEdit {this}},
+    nextButton  {new QPushButton {this}},
+    exitButton  {new QPushButton {this}}
 {
-    setWindowTitle(codec->toUnicode("Возведение в квадрат"));
+    this->setWindowTitle(codec->toUnicode("Возведение в квадрат"));
 
     frame->setFrameShadow(QFrame::Raised);
     frame->setFrameShape(QFrame::Panel);
