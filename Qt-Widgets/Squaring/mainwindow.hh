@@ -14,18 +14,18 @@
 #include <QMessageBox>
 
 class MainWindow : public QWidget { Q_OBJECT
-    QTextCodec * codec;
-    QFrame * frame;
-    QLabel * inputLabel;
-    QLabel * outputLabel;
-    QLineEdit * inputEdit;
-    QLineEdit * outputEdit;
+    QTextCodec *  codec;
+    QFrame *      frame;
+    QLabel *      inputLabel;
+    QLabel *      outputLabel;
+    QLineEdit *   inputEdit;
+    QLineEdit *   outputEdit;
     QPushButton * nextButton;
     QPushButton * exitButton;
 
 public:
     MainWindow(QWidget * parent);
-    MainWindow() : MainWindow {nullptr} {}
+    MainWindow(): MainWindow {nullptr} {}
 
 public slots:
     void reset();
