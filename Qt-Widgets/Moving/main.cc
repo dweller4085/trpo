@@ -1,6 +1,5 @@
 #include <QApplication>
 #include <QCoreApplication>
-#include <MKB/aliases.h>
 #include "mainwindow.hh"
 
 int main (int argc, char ** argv) {

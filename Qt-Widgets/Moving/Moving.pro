@@ -6,19 +6,18 @@
 
 QT       += core gui widgets
 
-TARGET = Counter
+TARGET = Moving
 
 TEMPLATE = app
 
 DEFINES += QT_DEPRECATED_WARNINGS
 
-INCLUDEPATH += "C:\lib\MKB\include"
-
 SOURCES += \
-        main.cc \
-        mainwindow.cc \
-    counter.cc
+    graphics.cc \
+    main.cc \
+    mainwindow.cc \
 
 HEADERS += \
-        mainwindow.hh \
-    counter.hh
+    common.hh \
+    graphics.hh \
+    mainwindow.hh \
