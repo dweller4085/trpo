@@ -1,7 +1,7 @@
 #include <string>
 #include <iostream>
-#include <memory>
-#include <MKB/aliases.h>
+#include "iocc.hh"
+#include "common.hh"
 
 struct Arch {
     enum EArch { x86, x86_64 } a;
