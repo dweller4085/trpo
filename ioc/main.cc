@@ -1,7 +1,8 @@
 #include <string>
 #include <iostream>
 #include "iocc.hh"
-#include "common.hh"
+
+IoCContainer static gIoCContainer;
 
 struct Arch {
     enum EArch { x86, x86_64 } a;
@@ -101,20 +102,25 @@ struct PC {
         cpu->overClock(config.overClockFactor);
     }
 
+    std::string info() const {
+        return {"cpu: " + cpu->info()};
+    }
+
 private:
     std::shared_ptr<ICPU> cpu;
 };
 
-
 int main() {
-    auto intelCPU = std::make_shared<IntelCPU>("Core i7", "K12080", Arch::x86_64, 16, 3.2f);
-    auto amdCPU = std::make_shared<AMDCPU>("Ryzen 7", "680", Arch::x86, 4, 2.6f);
+    gIoCContainer.registerInstance<ICPU, IntelCPU>("Core i7", "K12080", Arch::x86_64, 16, 3.2f);
 
-    auto pc = PC {intelCPU};
+    auto pc = PC {gIoCContainer.getInstance<ICPU>()};
+    
     pc.configureCPU({});
-    std::cout << pc.getCPU()->info() << "\n\n";
+    std::cout << pc.info() << "\n\n";
 
-    pc.setCPU(amdCPU);
-    pc.configureCPU(PC::CPUConfig {.overClockFactor = 1.1f});
-    std::cout << pc.getCPU()->info() << "\n";
+    gIoCContainer.registerInstance<ICPU, AMDCPU>("Ryzen 7", "680", Arch::x86, 4, 2.6f);
+
+    pc.setCPU(gIoCContainer.getInstance<ICPU>());
+    pc.configureCPU({.overClockFactor = 1.1f});
+    std::cout << pc.info() << "\n";
 }
