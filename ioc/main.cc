@@ -5,13 +5,15 @@
 IoCContainer static gIoCContainer;
 
 struct Arch {
-    enum EArch { x86, x86_64 } a;
-    Arch(EArch a): a {a} {}
+    enum EArch { x86, x86_64, MIPS, RISCV, __count } arch;
+    Arch(EArch arch): arch {arch} {}
     operator std::string() const {
-        static constexpr char const * names[2] {
+        static constexpr char const * names[__count] {
             "x86",
-            "x86_64"
-        }; return names[(int) a];
+            "x86_64",
+            "MIPS",
+            "RISC-V"
+        }; return names[(int) arch];
     }
 };
 
@@ -111,15 +113,15 @@ private:
 };
 
 int main() {
-    gIoCContainer.registerInstance<ICPU, IntelCPU>("Core i7", "K12080", Arch::x86_64, 16, 3.2f);
+    gIoCContainer.registerService<ICPU, IntelCPU>("Core i7", "K12080", Arch::x86_64, 16, 3.2f);
 
-    auto pc = PC {gIoCContainer.getInstance<ICPU>()};
+    auto pc = PC {gIoCContainer.getService<ICPU>()};
     pc.configureCPU({});
     std::cout << pc.info() << "\n\n";
 
-    gIoCContainer.registerInstance<ICPU, AMDCPU>("Ryzen 7", "680", Arch::x86, 4, 2.6f);
+    gIoCContainer.registerService<ICPU, AMDCPU>("Ryzen 7", "680", Arch::x86, 4, 2.6f);
 
-    pc.setCPU(gIoCContainer.getInstance<ICPU>());
+    pc.setCPU(gIoCContainer.getService<ICPU>());
     pc.configureCPU({.overClockFactor = 1.1f});
     std::cout << pc.info() << "\n";
 }
