@@ -103,7 +103,7 @@ struct PC {
     }
 
     std::string info() const {
-        return {"cpu: " + cpu->info()};
+        return {"PC info:\nCPU: " + cpu->info()};
     }
 
 private:
@@ -114,7 +114,6 @@ int main() {
     gIoCContainer.registerInstance<ICPU, IntelCPU>("Core i7", "K12080", Arch::x86_64, 16, 3.2f);
 
     auto pc = PC {gIoCContainer.getInstance<ICPU>()};
-    
     pc.configureCPU({});
     std::cout << pc.info() << "\n\n";
 

@@ -5,28 +5,22 @@
 #include "common.hh"
 
 class IoCContainer {
-    struct IObject {
-        virtual ~IObject() = default;
-    };
-    
-    template <typename T>
-    struct Object: IObject {
-        std::shared_ptr<T> object;
-    };
-
     using type_hash = size_t;
-    std::map<type_hash, IObject *> items;
+    std::map<type_hash, std::shared_ptr<void>> items;
 
 public:
-    
     template <typename I, typename C, typename... Args>
     void registerInstance(Args&& ...args) {
-        items.insert({{(typeid (I)).hash_code(), new Object<C> {}}});
+        items.erase((typeid (I)).hash_code());
+        items.insert({{(typeid (I)).hash_code(), std::static_pointer_cast<void>(std::make_shared<C>(std::forward<Args>(args)...))}});
     }
     
     template <typename I>
     std::shared_ptr<I> getInstance() {
-        
-        return {};
+        if (items.contains((typeid (I)).hash_code())) {
+            return std::static_pointer_cast<I>(items[(typeid (I)).hash_code()]);
+        } else {
+            return nullptr;
+        }
     }
 };
