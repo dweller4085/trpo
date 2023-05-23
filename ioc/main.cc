@@ -2,8 +2,6 @@
 #include <iostream>
 #include "iocc.hh"
 
-IoCContainer static gIoCContainer;
-
 struct Arch {
     enum EArch { x86, x86_64, MIPS, RISCV, __count } arch;
     Arch(EArch arch): arch {arch} {}
@@ -77,7 +75,7 @@ struct AMDCPU : ICPU {
     }
 
     virtual void overClock(f32 factor) override {
-        clockRate *= factor;
+        clockRate *= factor + 0.0000003f;
     }
 
 private:
@@ -87,6 +85,11 @@ private:
     s32 nCores;
     f32 clockRate;
     char const * const amdSpecific {"AMD"};
+};
+
+struct NullCPU: ICPU {
+    virtual std::string info() const override { return {};}
+    virtual void overClock(f32 factor) override {}
 };
 
 struct PC {
@@ -112,16 +115,20 @@ private:
     std::shared_ptr<ICPU> cpu;
 };
 
-int main() {
-    gIoCContainer.registerService<ICPU, IntelCPU>("Core i7", "K12080", Arch::x86_64, 16, 3.2f);
+IoCContainer static gIoCContainer;
 
+void clientCode() {
     auto pc = PC {gIoCContainer.getService<ICPU>()};
-    pc.configureCPU({});
+    pc.configureCPU({.overClockFactor = 1.1f});
     std::cout << pc.info() << "\n\n";
+}
+
+int main() {
+    gIoCContainer.registerService<ICPU, NullCPU>();
+
+    gIoCContainer.registerService<ICPU, IntelCPU>("Core i7", "K12080", Arch::x86_64, 16, 3.2f);
+    clientCode();
 
     gIoCContainer.registerService<ICPU, AMDCPU>("Ryzen 7", "680", Arch::x86, 4, 2.6f);
-
-    pc.setCPU(gIoCContainer.getService<ICPU>());
-    pc.configureCPU({.overClockFactor = 1.1f});
-    std::cout << pc.info() << "\n";
+    clientCode();
 }
