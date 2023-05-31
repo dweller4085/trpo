@@ -1,13 +1,12 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2023-05-21T18:12:41
+# Project created by QtCreator 2023-05-30T14:14:41
 #
 #-------------------------------------------------
 
 QT       += core gui widgets
 
-TARGET = PlotterApp
-
+TARGET = lab3
 TEMPLATE = app
 
 SOURCES += \
@@ -15,10 +14,6 @@ SOURCES += \
         mainwindow.cc
 
 HEADERS += \
-        mainwindow.hh \
-    common.hh
+        mainwindow.hh
 
-INCLUDEPATH += "C:\lib\MKB\include"
-
-FORMS += \
-    mainwindow.ui
+INCLUDEPATH += C:/lib/MKB/include
