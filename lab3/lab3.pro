@@ -11,9 +11,15 @@ TEMPLATE = app
 
 SOURCES += \
         main.cc \
-        mainwindow.cc
+    fileview.cc \
+    chartview.cc \
+    chartsapp.cc
 
 HEADERS += \
-        mainwindow.hh
+    fileview.hh \
+    chartview.hh \
+    iocc.hh \
+    common.hh \
+    chartsapp.hh
 
 INCLUDEPATH += C:/lib/MKB/include

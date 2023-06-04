@@ -2,13 +2,17 @@
 #include <QFileDialog>
 #include <MKB/aliases.h>
 
-#include "mainwindow.hh"
+#include "chartsapp.hh"
 
+
+#include <QFile>
 
 int main (int argc, char ** argv) {
     QApplication app {argc, argv};
-    MainWindow window;
+    ChartsApp window;
     window.show();
+
+
 
     return app.exec();
 }
