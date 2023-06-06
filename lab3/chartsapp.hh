@@ -52,6 +52,10 @@ class BarChart: public IChartTemplate {
 
 };
 
+class PieChart: public IChartTemplate {
+
+};
+
 class ChartsApp: public QMainWindow { Q_OBJECT
 public:
     ChartsApp();

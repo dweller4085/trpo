@@ -13,4 +13,8 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
     auto layout = new QVBoxLayout {this};
     layout->addWidget(view);
     layout->addWidget(openFolder);
+    this->setMinimumWidth(200);
+
+    //this doesnt work
+    //this->sizePolicy().setHorizontalStretch(1);
 }
