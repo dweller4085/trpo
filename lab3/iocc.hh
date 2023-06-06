@@ -27,4 +27,6 @@ public:
     }
 };
 
+extern IoCContainer gIoCContainer;
+
 #endif // IOCC_HH

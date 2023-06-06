@@ -2,6 +2,8 @@
 
 #include <QSplitter>
 
+IoCContainer gIoCContainer;
+
 ChartsApp::ChartsApp() {
     auto splitter = new QSplitter {this};
     this->fileView = new FileView {this};
@@ -10,7 +12,6 @@ ChartsApp::ChartsApp() {
     splitter->addWidget(fileView);
     splitter->addWidget(chartView);
 
-    //this does work
     splitter->setStretchFactor(0, 2);
     splitter->setStretchFactor(1, 5);
 

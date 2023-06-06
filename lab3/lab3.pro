@@ -13,13 +13,17 @@ SOURCES += \
         main.cc \
     fileview.cc \
     chartview.cc \
-    chartsapp.cc
+    chartsapp.cc \
+    filereadingstrategy.cc \
+    charttemplate.cc
 
 HEADERS += \
     fileview.hh \
     chartview.hh \
     iocc.hh \
     common.hh \
-    chartsapp.hh
+    chartsapp.hh \
+    filereadingstrategy.hh \
+    charttemplate.hh
 
 INCLUDEPATH += C:/lib/MKB/include

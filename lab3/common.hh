@@ -26,5 +26,24 @@ typedef double f64;
 
 #endif // __MKB_ALIASES_H
 
+#include "iocc.hh"
+#include <QVector>
+#include <QtCharts/QtCharts>
+#include <QtCharts/QChart>
+
+struct ChartData {
+    struct Point {
+        float t;
+        float v;
+    };
+
+    QVector<Point> points;
+};
+
+enum ColorScheme {
+    Light,
+    Dark,
+    BlueCerulean,
+};
 
 #endif // COMMON_HH
