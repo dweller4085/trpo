@@ -27,6 +27,12 @@ struct ColorScheme {
             case Light:
                 s = "Light";
             break;
+            case Dark:
+                s = "Dark";
+            break;
+            case BlueCerulean:
+                s = "Blue Cerulean";
+            break;
         }
 
         return s;
@@ -46,6 +52,12 @@ struct ChartType {
         switch (type) {
             case Pie:
                 s = "Pie";
+            break;
+            case Bar:
+                s = "Bar";
+            break;
+            case Line:
+                s = "Line";
             break;
         }
 
@@ -75,6 +87,6 @@ struct DataFormat {
     }
 };
 
-QVector<DataFormat> const gSupportedDataFormats {{DataFormat::JSON}, {DataFormat::CSV}};
+QVector<DataFormat> static const gSupportedDataFormats {{DataFormat::JSON}, {DataFormat::CSV}};
 
 #endif // COMMON_HH

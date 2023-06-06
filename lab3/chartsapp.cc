@@ -1,6 +1,7 @@
 #include "chartsapp.hh"
 
 #include <QSplitter>
+#include <iostream>
 
 #include "iocc.hh"
 IoCContainer gIoCContainer;
@@ -20,5 +21,6 @@ ChartsApp::ChartsApp() {
 
     setMinimumHeight(400);
 
-    QObject::connect(fileView, &FileView::fileSelected, this, &ChartsApp::onFileSelected);
+    //QObject::connect(fileView, &FileView::fileSelected, this, &ChartsApp::onFileSelected);
+    QObject::connect(fileView, &FileView::fileSelected, [] (QString const& path) -> void {std::cout << path.toStdString() << std::endl;});
 }

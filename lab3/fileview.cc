@@ -1,6 +1,9 @@
 #include "fileview.hh"
 #include <QVBoxLayout>
 #include <QDir>
+#include <QFileDialog>
+#include <QStringList>
+#include "common.hh"
 
 FileView::FileView(QWidget * parent): QWidget {parent} {
     model = new QFileSystemModel {this};
@@ -8,7 +11,14 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
     pbOpenFolder = new QPushButton {this};
     auto layout = new QVBoxLayout {this};
 
-    model->setFilter(QDir::NoDotAndDotDot | QDir::Files);
+    model->setFilter(QDir::Files);
+    auto filters = QStringList {};
+    for (auto format: gSupportedDataFormats) {
+        filters << format.asExtension();
+    }
+    model->setNameFilters(filters);
+    model->setNameFilterDisables(false);
+
     model->setRootPath(QDir::currentPath());
 
     view->setModel(model);
@@ -20,7 +30,23 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
     layout->addWidget(pbOpenFolder);
     this->setMinimumWidth(360);
 
-    QObject::connect(view, &QListView::clicked, this, &FileView::onFileSelected);
+    QObject::connect(view, &QListView::activated, this, &FileView::onFileSelected);
     QObject::connect(pbOpenFolder, &QPushButton::clicked, this, &FileView::onPbOpenFolderClicked);
 
+}
+
+void FileView::onPbOpenFolderClicked() {
+    auto directory = QFileDialog::getExistingDirectory();
+    model->setRootPath(directory);
+    view->setRootIndex(model->index(directory));
+    pbOpenFolder->setText(directory);
+}
+
+void FileView::onFileSelected(QModelIndex const& index) {
+    static QModelIndex previousIndex;
+
+    if (previousIndex != index) {
+        emit FileView::fileSelected(model->filePath(index));
+        previousIndex = index;
+    }
 }

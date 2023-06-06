@@ -14,11 +14,11 @@ public:
     explicit ChartView(QWidget * parent);
 
 public slots:
-    void onDataChanged(ChartData const&);
+    //void onDataChanged(ChartData const&);
 
 private slots:
-    void onChartTypeChanged(ChartType);
-    void onColorSchemeChanged(ColorScheme);
+    //void onChartTypeChanged(ChartType);
+    //void onColorSchemeChanged(ColorScheme);
 
 private:
     QChartView *  chartView;
