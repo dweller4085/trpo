@@ -3,21 +3,38 @@
 #include <QHBoxLayout>
 #include <QLabel>
 
+#include <QtCharts/QPieSeries>
+#include <QtCharts/QChart>
+
 ChartView::ChartView(QWidget * parent): QWidget {parent} {
     auto layout = new QVBoxLayout {this};
-    layout->addWidget(new QLabel {"heelo"});
-    auto hlay = new QHBoxLayout {};
+    auto buttons = new QHBoxLayout {};
+    chartView = new QChartView {};
     chartType = new QComboBox {};
-    //chartType->setMinimumWidth(100);
     colorScheme = new QComboBox {};
-    //colorScheme->setMinimumWidth(100);
     saveToPDF = new QPushButton {"save to pdf"};
-    hlay->addWidget(chartType);
-    hlay->addWidget(colorScheme);
-    hlay->addStretch();
-    hlay->addWidget(saveToPDF);
-    layout->addLayout(hlay);
+    //chartType->setMinimumWidth(100);
+    //colorScheme->setMinimumWidth(100);
 
-    //this doesnt work
-    //this->sizePolicy().setHorizontalStretch(4);
+    auto series = new QPieSeries {};
+    series->append("a", 1);
+    series->append("b", 2);
+    auto chart = new QChart {};
+    chart->addSeries(series);
+
+    chart->layout()->setContentsMargins(0, 0, 0, 0);
+    chart->setBackgroundRoundness(0);
+
+    chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->setChart(chart);
+
+    buttons->addWidget(chartType);
+    buttons->addWidget(colorScheme);
+    buttons->addStretch();
+    buttons->addWidget(saveToPDF);
+
+    layout->addWidget(chartView);
+    layout->addLayout(buttons);
+
+    this->setMinimumWidth(360);
 }

@@ -9,7 +9,7 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
     view->setModel(model);
     view->setRootIndex(model->index(QDir::currentPath()));
     openFolder = new QPushButton {this};
-    openFolder->setText("C:\\");
+    openFolder->setText(QDir::currentPath());
     auto layout = new QVBoxLayout {this};
     layout->addWidget(view);
     layout->addWidget(openFolder);
