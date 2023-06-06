@@ -3,6 +3,8 @@
 
 #include "common.hh"
 #include <QtCharts/QAbstractSeries>
+#include <QtCharts/QtCharts>
+#include <QtCharts/QChart>
 
 struct IChartTemplate {
     QChart * createChart(ChartData const& cd, ColorScheme const& cs) {

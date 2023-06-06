@@ -10,9 +10,9 @@ ChartView::ChartView(QWidget * parent): QWidget {parent} {
     auto layout = new QVBoxLayout {this};
     auto buttons = new QHBoxLayout {};
     chartView = new QChartView {};
-    chartType = new QComboBox {};
-    colorScheme = new QComboBox {};
-    saveToPDF = new QPushButton {"save to pdf"};
+    cbChartType = new QComboBox {};
+    cbColorScheme = new QComboBox {};
+    pbSaveToPDF = new QPushButton {"save to pdf"};
     //chartType->setMinimumWidth(100);
     //colorScheme->setMinimumWidth(100);
 
@@ -20,7 +20,7 @@ ChartView::ChartView(QWidget * parent): QWidget {parent} {
     series->append("a", 1);
     series->append("b", 2);
     auto chart = new QChart {};
-    chart->addSeries(series);
+    //chart->addSeries(series);
 
     chart->layout()->setContentsMargins(0, 0, 0, 0);
     chart->setBackgroundRoundness(0);
@@ -28,10 +28,10 @@ ChartView::ChartView(QWidget * parent): QWidget {parent} {
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setChart(chart);
 
-    buttons->addWidget(chartType);
-    buttons->addWidget(colorScheme);
+    buttons->addWidget(cbChartType);
+    buttons->addWidget(cbColorScheme);
     buttons->addStretch();
-    buttons->addWidget(saveToPDF);
+    buttons->addWidget(pbSaveToPDF);
 
     layout->addWidget(chartView);
     layout->addLayout(buttons);

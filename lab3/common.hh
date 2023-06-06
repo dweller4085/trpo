@@ -1,35 +1,8 @@
 #ifndef COMMON_HH
 #define COMMON_HH
 
-#ifndef __MKB_ALIASES_H
-#define __MKB_ALIASES_H
-
-#include <stdint.h>
-typedef int8_t s8;
-typedef int16_t s16;
-typedef int32_t s32;
-typedef int64_t s64;
-typedef uint8_t u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-typedef size_t usize;
-typedef ptrdiff_t isize;
-typedef float f32;
-typedef double f64;
-
-#ifdef __cplusplus
-    #include <utility>
-    //#define let auto
-    //#define self (*this)
-#endif
-
-#endif // __MKB_ALIASES_H
-
-#include "iocc.hh"
 #include <QVector>
-#include <QtCharts/QtCharts>
-#include <QtCharts/QChart>
+#include <QString>
 
 struct ChartData {
     struct Point {
@@ -40,10 +13,68 @@ struct ChartData {
     QVector<Point> points;
 };
 
-enum ColorScheme {
-    Light,
-    Dark,
-    BlueCerulean,
+struct ColorScheme {
+    enum {
+        Light,
+        Dark,
+        BlueCerulean,
+    } scheme;
+
+    explicit operator QString() const {
+        QString s;
+
+        switch (scheme) {
+            case Light:
+                s = "Light";
+            break;
+        }
+
+        return s;
+    }
 };
+
+struct ChartType {
+    enum {
+        Pie,
+        Bar,
+        Line
+    } type;
+
+    explicit operator QString() const {
+        QString s;
+
+        switch (type) {
+            case Pie:
+                s = "Pie";
+            break;
+        }
+
+        return s;
+    }
+};
+
+struct DataFormat {
+    enum {
+        JSON,
+        CSV
+    } format;
+
+    QString asExtension() const {
+        QString ext;
+
+        switch (format) {
+            case JSON:
+                ext = "*.json";
+            break;
+            case CSV:
+                ext = "*.csv";
+            break;
+        }
+
+        return ext;
+    }
+};
+
+QVector<DataFormat> const gSupportedDataFormats {{DataFormat::JSON}, {DataFormat::CSV}};
 
 #endif // COMMON_HH

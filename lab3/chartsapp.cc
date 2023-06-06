@@ -2,6 +2,7 @@
 
 #include <QSplitter>
 
+#include "iocc.hh"
 IoCContainer gIoCContainer;
 
 ChartsApp::ChartsApp() {
@@ -12,10 +13,12 @@ ChartsApp::ChartsApp() {
     splitter->addWidget(fileView);
     splitter->addWidget(chartView);
 
-    splitter->setStretchFactor(0, 2);
-    splitter->setStretchFactor(1, 5);
+    splitter->setStretchFactor(0, 1);
+    splitter->setStretchFactor(1, 3);
 
     setCentralWidget(splitter);
 
-    setMinimumHeight(360);
+    setMinimumHeight(400);
+
+    QObject::connect(fileView, &FileView::fileSelected, this, &ChartsApp::onFileSelected);
 }

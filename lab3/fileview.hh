@@ -10,10 +10,17 @@ class FileView: public QWidget { Q_OBJECT
 public:
     explicit FileView(QWidget * parent);
 
+signals:
+    void fileSelected(QString const&);
+
+private slots:
+    void onFileSelected(QModelIndex const&);
+    void onPbOpenFolderClicked();
+
 private:
     QFileSystemModel * model;
     QListView * view;
-    QPushButton * openFolder;
+    QPushButton * pbOpenFolder;
 };
 
 #endif // FILEVIEW_HH
