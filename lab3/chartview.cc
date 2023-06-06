@@ -7,12 +7,12 @@
 #include <QtCharts/QChart>
 
 ChartView::ChartView(QWidget * parent): QWidget {parent} {
-    auto layout = new QVBoxLayout {this};
-    auto buttons = new QHBoxLayout {};
+    layout = new QVBoxLayout {this};
     chartView = new QChartView {};
     cbChartType = new QComboBox {};
     cbColorScheme = new QComboBox {};
     pbSaveToPDF = new QPushButton {"save to pdf"};
+    auto buttons = new QHBoxLayout {};
     //chartType->setMinimumWidth(100);
     //colorScheme->setMinimumWidth(100);
 

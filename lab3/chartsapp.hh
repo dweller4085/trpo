@@ -7,13 +7,14 @@
 
 #include <QMainWindow>
 #include <QString>
+#include <QLabel>
 
 class ChartsApp: public QMainWindow { Q_OBJECT
 public:
     ChartsApp();
 
 public slots:
-    //void onFileSelected(QString const&);
+    void onFileSelected(QString const&);
 
 private:
     FileView * fileView;

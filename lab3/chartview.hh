@@ -7,6 +7,7 @@
 #include <QComboBox>
 #include <QtCharts/QtCharts>
 #include <QtCharts/QChartView>
+#include <QVBoxLayout>
 
 
 class ChartView: public QWidget { Q_OBJECT
@@ -25,8 +26,12 @@ private:
     QComboBox *   cbChartType;
     QComboBox *   cbColorScheme;
     QPushButton * pbSaveToPDF;
+    QLabel * infoLabel;
+    QVBoxLayout * layout;
 
     ColorScheme colorScheme;
+    ChartType type;
+    bool isChart;
 };
 
 #endif // CHARTVIEW_HH

@@ -43,7 +43,7 @@ struct ChartType {
     enum {
         Pie,
         Bar,
-        Line
+        Line,
     } type;
 
     explicit operator QString() const {
@@ -88,5 +88,7 @@ struct DataFormat {
 };
 
 QVector<DataFormat> static const gSupportedDataFormats {{DataFormat::JSON}, {DataFormat::CSV}};
+QVector<ChartType> static const gSupportedChartTypes {{ChartType::Pie}, {ChartType::Bar}, {ChartType::Line}};
+QVector<ColorScheme> static const gSupportedColorSchemes {{ColorScheme::Light}, {ColorScheme::Dark}, {ColorScheme::BlueCerulean}};
 
 #endif // COMMON_HH

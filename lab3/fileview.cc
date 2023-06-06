@@ -11,14 +11,16 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
     pbOpenFolder = new QPushButton {this};
     auto layout = new QVBoxLayout {this};
 
-    model->setFilter(QDir::Files);
-    auto filters = QStringList {};
-    for (auto format: gSupportedDataFormats) {
-        filters << format.asExtension();
+    {
+        auto filters = QStringList {};
+        for (auto format: gSupportedDataFormats) {
+            filters << format.asExtension();
+        }
+        model->setNameFilters(filters);
     }
-    model->setNameFilters(filters);
-    model->setNameFilterDisables(false);
 
+    model->setFilter(QDir::Files);
+    model->setNameFilterDisables(false);
     model->setRootPath(QDir::currentPath());
 
     view->setModel(model);
@@ -32,7 +34,6 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
 
     QObject::connect(view, &QListView::activated, this, &FileView::onFileSelected);
     QObject::connect(pbOpenFolder, &QPushButton::clicked, this, &FileView::onPbOpenFolderClicked);
-
 }
 
 void FileView::onPbOpenFolderClicked() {
@@ -43,7 +44,7 @@ void FileView::onPbOpenFolderClicked() {
 }
 
 void FileView::onFileSelected(QModelIndex const& index) {
-    static QModelIndex previousIndex;
+    QModelIndex static previousIndex;
 
     if (previousIndex != index) {
         emit FileView::fileSelected(model->filePath(index));
