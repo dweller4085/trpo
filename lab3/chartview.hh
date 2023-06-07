@@ -8,6 +8,7 @@
 #include <QtCharts/QtCharts>
 #include <QtCharts/QChartView>
 #include <QVBoxLayout>
+#include <QFileInfo>
 
 
 class ChartView: public QWidget { Q_OBJECT
@@ -15,7 +16,8 @@ public:
     explicit ChartView(QWidget * parent);
 
 public slots:
-    //void onDataChanged(ChartData const&);
+    void onDataChanged(ChartData const&);
+    void onDataInvalidated(QFileInfo const&);
 
 private slots:
     //void onChartTypeChanged(ChartType);
@@ -31,7 +33,6 @@ private:
 
     ColorScheme colorScheme;
     ChartType type;
-    bool isChart;
 };
 
 #endif // CHARTVIEW_HH

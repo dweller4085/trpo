@@ -8,13 +8,18 @@
 #include <QMainWindow>
 #include <QString>
 #include <QLabel>
+#include <QFileInfo>
 
 class ChartsApp: public QMainWindow { Q_OBJECT
 public:
     ChartsApp();
 
+signals:
+    void dataChanged(ChartData const&);
+    void dataInvalidated(QFileInfo const&);
+
 public slots:
-    void onFileSelected(QString const&);
+    void onFileSelected(QFileInfo const&);
 
 private:
     FileView * fileView;

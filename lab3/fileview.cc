@@ -14,12 +14,12 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
     {
         auto filters = QStringList {};
         for (auto format: gSupportedDataFormats) {
-            filters << format.asExtension();
+            filters << "*." + format.asExtension();
         }
         model->setNameFilters(filters);
     }
 
-    model->setFilter(QDir::Files);
+    model->setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
     model->setNameFilterDisables(false);
     model->setRootPath(QDir::currentPath());
 
@@ -30,7 +30,7 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
 
     layout->addWidget(view);
     layout->addWidget(pbOpenFolder);
-    this->setMinimumWidth(360);
+    this->setMinimumWidth(300);
 
     QObject::connect(view, &QListView::activated, this, &FileView::onFileSelected);
     QObject::connect(pbOpenFolder, &QPushButton::clicked, this, &FileView::onPbOpenFolderClicked);
@@ -38,16 +38,18 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
 
 void FileView::onPbOpenFolderClicked() {
     auto directory = QFileDialog::getExistingDirectory();
-    model->setRootPath(directory);
-    view->setRootIndex(model->index(directory));
-    pbOpenFolder->setText(directory);
+    if (!directory.isEmpty()) {
+        model->setRootPath(directory);
+        view->setRootIndex(model->index(directory));
+        pbOpenFolder->setText(directory);
+    }
 }
 
 void FileView::onFileSelected(QModelIndex const& index) {
     QModelIndex static previousIndex;
 
     if (previousIndex != index) {
-        emit FileView::fileSelected(model->filePath(index));
+        emit FileView::fileSelected(model->fileInfo(index));
         previousIndex = index;
     }
 }

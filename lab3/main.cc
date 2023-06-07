@@ -1,18 +1,20 @@
 #include <QApplication>
 #include <QFileDialog>
-#include <MKB/aliases.h>
 
 #include "chartsapp.hh"
+#include "filereadingstrategy.hh"
+#include "charttemplate.hh"
+#include "iocc.hh"
 
-
-#include <QFile>
+IoCContainer gIoCContainer;
 
 int main (int argc, char ** argv) {
+    //gIoCContainer.registerService<IFileReadingStrategy, NullStrategy>();
+    //gIoCContainer.registerService<IChartTemplate, NullChart>();
+
     QApplication app {argc, argv};
     ChartsApp window;
     window.show();
-
-
 
     return app.exec();
 }

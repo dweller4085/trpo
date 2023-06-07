@@ -2,11 +2,8 @@
 
 #include <QSplitter>
 #include <iostream>
-
 #include "filereadingstrategy.hh"
-
 #include "iocc.hh"
-IoCContainer gIoCContainer;
 
 ChartsApp::ChartsApp() {
     auto splitter = new QSplitter {this};
@@ -23,10 +20,16 @@ ChartsApp::ChartsApp() {
 
     setMinimumHeight(400);
 
+    QObject::connect(fileView, &FileView::fileSelected, updateStrategy);
     QObject::connect(fileView, &FileView::fileSelected, this, &ChartsApp::onFileSelected);
-    //QObject::connect(fileView, &FileView::fileSelected, [] (QString const& path) -> void {std::cout << path.toStdString() << std::endl;});
 }
 
-void ChartsApp::onFileSelected(QString const& path) {
+void ChartsApp::onFileSelected(QFileInfo const& info) {
+    auto readingStrategy = gIoCContainer.getService<IFileReadingStrategy>();
 
+    if (readingStrategy->read(info.absoluteFilePath(), this->data)) {
+        emit ChartsApp::dataChanged(data);
+    } else {
+        emit ChartsApp::dataInvalidated(info);
+    }
 }

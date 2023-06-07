@@ -2,14 +2,19 @@
 #define FILEREADINGSTRATEGY_HH
 
 #include "common.hh"
+#include <QFileInfo>
+
+void updateStrategy(QFileInfo const&);
 
 struct IFileReadingStrategy {
-    virtual ChartData read(QString const& path, bool& success) = 0;
+    virtual bool read(QString const& path, ChartData& data) = 0;
     virtual ~IFileReadingStrategy() = default;
 };
 
-struct JSON: IFileReadingStrategy {};
+struct JSONStrategy: IFileReadingStrategy {};
 
-struct SQLite: IFileReadingStrategy {};
+struct SQLiteStrategy: IFileReadingStrategy {};
+
+struct NullStrategy: IFileReadingStrategy {};
 
 #endif // FILEREADINGSTRATEGY_HH

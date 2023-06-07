@@ -6,8 +6,9 @@
 
 struct ChartData {
     struct Point {
-        float t;
-        float v;
+        float time;
+        float value;
+        QString category;
     };
 
     QVector<Point> points;
@@ -32,6 +33,9 @@ struct ColorScheme {
             break;
             case BlueCerulean:
                 s = "Blue Cerulean";
+            break;
+            default:
+                s = "";
             break;
         }
 
@@ -59,6 +63,9 @@ struct ChartType {
             case Line:
                 s = "Line";
             break;
+            default:
+                s = "";
+            break;
         }
 
         return s;
@@ -68,7 +75,7 @@ struct ChartType {
 struct DataFormat {
     enum {
         JSON,
-        CSV
+        CSV,
     } format;
 
     QString asExtension() const {
@@ -76,10 +83,13 @@ struct DataFormat {
 
         switch (format) {
             case JSON:
-                ext = "*.json";
+                ext = "json";
             break;
             case CSV:
-                ext = "*.csv";
+                ext = "csv";
+            break;
+            default:
+                ext = "";
             break;
         }
 

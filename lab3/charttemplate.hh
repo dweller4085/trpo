@@ -30,4 +30,6 @@ struct PieChart: IChartTemplate {};
 
 struct LineChart: IChartTemplate {};
 
+struct NullChart: IChartTemplate {};
+
 #endif // CHARTTEMPLATE_HH

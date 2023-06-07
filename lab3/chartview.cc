@@ -27,6 +27,7 @@ ChartView::ChartView(QWidget * parent): QWidget {parent} {
 
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setChart(chart);
+    chartView->setFrameStyle(QFrame::StyledPanel);
 
     buttons->addWidget(cbChartType);
     buttons->addWidget(cbColorScheme);
@@ -38,3 +39,6 @@ ChartView::ChartView(QWidget * parent): QWidget {parent} {
 
     this->setMinimumWidth(360);
 }
+
+void ChartView::onDataChanged(ChartData const& data) {}
+void ChartView::onDataInvalidated(QFileInfo const& data) {}

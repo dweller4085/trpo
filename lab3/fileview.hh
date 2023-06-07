@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QFileSystemModel>
 #include <QListView>
+#include <QFileInfo>
 #include <QPushButton>
 
 class FileView: public QWidget { Q_OBJECT
@@ -11,7 +12,7 @@ public:
     explicit FileView(QWidget * parent);
 
 signals:
-    void fileSelected(QString const&);
+    void fileSelected(QFileInfo const&);
 
 private slots:
     void onFileSelected(QModelIndex const&);
