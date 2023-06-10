@@ -1,15 +1,13 @@
-#ifndef CHARTVIEW_HH
-#define CHARTVIEW_HH
+#pragma once
 
-#include "common.hh"
-#include <QWidget>
+#include <QVBoxLayout>
 #include <QPushButton>
 #include <QComboBox>
-#include <QtCharts/QtCharts>
-#include <QtCharts/QChartView>
-#include <QVBoxLayout>
 #include <QFileInfo>
+#include <QWidget>
+#include <QLabel>
 
+#include "charts.hh"
 
 class ChartView: public QWidget { Q_OBJECT
 public:
@@ -22,6 +20,7 @@ public slots:
 private slots:
     //void onChartTypeChanged(ChartType);
     //void onColorSchemeChanged(ColorScheme);
+    //void onPbSaveToPDFPressed();
 
 private:
     QChartView *  chartView;
@@ -32,7 +31,5 @@ private:
     QVBoxLayout * layout;
 
     ColorScheme colorScheme;
-    ChartType type;
+    ChartType chartType;
 };
-
-#endif // CHARTVIEW_HH

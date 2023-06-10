@@ -1,9 +1,11 @@
 #include "fileview.hh"
+
 #include <QVBoxLayout>
-#include <QDir>
-#include <QFileDialog>
 #include <QStringList>
-#include "common.hh"
+#include <QFileDialog>
+#include <QDir>
+
+#include "data.hh"
 
 FileView::FileView(QWidget * parent): QWidget {parent} {
     model = new QFileSystemModel {this};

@@ -1,11 +1,12 @@
-#ifndef FILEVIEW_HH
-#define FILEVIEW_HH
+#pragma once
 
-#include <QWidget>
 #include <QFileSystemModel>
+#include <QPushButton>
 #include <QListView>
 #include <QFileInfo>
-#include <QPushButton>
+#include <QWidget>
+
+// crashes on list item double-click!!!
 
 class FileView: public QWidget { Q_OBJECT
 public:
@@ -23,5 +24,3 @@ private:
     QListView * view;
     QPushButton * pbOpenFolder;
 };
-
-#endif // FILEVIEW_HH

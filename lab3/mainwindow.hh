@@ -1,22 +1,21 @@
-#ifndef CHARTSAPP_HH
-#define CHARTSAPP_HH
-
-#include "fileview.hh"
-#include "chartview.hh"
-#include "common.hh"
+#pragma once
 
 #include <QMainWindow>
 #include <QString>
 #include <QLabel>
 #include <QFileInfo>
 
-class ChartsApp: public QMainWindow { Q_OBJECT
+#include "fileview.hh"
+#include "chartview.hh"
+#include "data.hh"
+
+class MainWindow: public QMainWindow { Q_OBJECT
 public:
-    ChartsApp();
+    MainWindow();
 
 signals:
     void dataChanged(ChartData const&);
-    void dataInvalidated(QFileInfo const&);
+    void dataInvalidated(QString const&);
 
 public slots:
     void onFileSelected(QFileInfo const&);
@@ -26,5 +25,3 @@ private:
     ChartView * chartView;
     ChartData data;
 };
-
-#endif // CHARTSAPP_HH

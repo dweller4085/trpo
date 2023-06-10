@@ -6,6 +6,8 @@
 
 QT       += core gui widgets charts
 
+CONFIG += c++17
+
 TARGET = lab3
 TEMPLATE = app
 
@@ -13,17 +15,17 @@ SOURCES += \
         main.cc \
     fileview.cc \
     chartview.cc \
-    chartsapp.cc \
-    filereadingstrategy.cc \
-    charttemplate.cc
+    charts.cc \
+    mainwindow.cc \
+    data.cc
 
 HEADERS += \
     fileview.hh \
     chartview.hh \
     iocc.hh \
-    common.hh \
-    chartsapp.hh \
-    filereadingstrategy.hh \
-    charttemplate.hh
+    charts.hh \
+    mainwindow.hh \
+    data.hh \
+    common.hh
 
 INCLUDEPATH += C:/lib/MKB/include

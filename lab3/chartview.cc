@@ -13,21 +13,16 @@ ChartView::ChartView(QWidget * parent): QWidget {parent} {
     cbColorScheme = new QComboBox {};
     pbSaveToPDF = new QPushButton {"save to pdf"};
     auto buttons = new QHBoxLayout {};
+    auto chart = new QChart {};
     //chartType->setMinimumWidth(100);
     //colorScheme->setMinimumWidth(100);
-
-    auto series = new QPieSeries {};
-    series->append("a", 1);
-    series->append("b", 2);
-    auto chart = new QChart {};
-    //chart->addSeries(series);
 
     chart->layout()->setContentsMargins(0, 0, 0, 0);
     chart->setBackgroundRoundness(0);
 
     chartView->setRenderHint(QPainter::Antialiasing);
-    chartView->setChart(chart);
     chartView->setFrameStyle(QFrame::StyledPanel);
+    chartView->setChart(chart);
 
     buttons->addWidget(cbChartType);
     buttons->addWidget(cbColorScheme);
@@ -40,5 +35,10 @@ ChartView::ChartView(QWidget * parent): QWidget {parent} {
     this->setMinimumWidth(360);
 }
 
-void ChartView::onDataChanged(ChartData const& data) {}
-void ChartView::onDataInvalidated(QFileInfo const& data) {}
+void ChartView::onDataChanged(ChartData const& data) {
+    // draw/redraw the chart with the template in gIoCC
+}
+
+void ChartView::onDataInvalidated(QFileInfo const& data) {
+    // change/hide/replace the chartView with a red QLabel in the layout
+}

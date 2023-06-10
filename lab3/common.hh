@@ -1,104 +1,26 @@
-#ifndef COMMON_HH
-#define COMMON_HH
+#pragma once
 
-#include <QVector>
-#include <QString>
+#ifndef __MKB_ALIASES_H
+#define __MKB_ALIASES_H
 
-struct ChartData {
-    struct Point {
-        float time;
-        float value;
-        QString category;
-    };
+#include <stdint.h>
+typedef int8_t s8;
+typedef int16_t s16;
+typedef int32_t s32;
+typedef int64_t s64;
+typedef uint8_t u8;
+typedef uint16_t u16;
+typedef uint32_t u32;
+typedef uint64_t u64;
+typedef size_t usize;
+typedef ptrdiff_t isize;
+typedef float f32;
+typedef double f64;
 
-    QVector<Point> points;
-};
+#ifdef __cplusplus
+    #include <utility>
+    //#define let auto
+    //#define self (*this)
+#endif
 
-struct ColorScheme {
-    enum {
-        Light,
-        Dark,
-        BlueCerulean,
-    } scheme;
-
-    explicit operator QString() const {
-        QString s;
-
-        switch (scheme) {
-            case Light:
-                s = "Light";
-            break;
-            case Dark:
-                s = "Dark";
-            break;
-            case BlueCerulean:
-                s = "Blue Cerulean";
-            break;
-            default:
-                s = "";
-            break;
-        }
-
-        return s;
-    }
-};
-
-struct ChartType {
-    enum {
-        Pie,
-        Bar,
-        Line,
-    } type;
-
-    explicit operator QString() const {
-        QString s;
-
-        switch (type) {
-            case Pie:
-                s = "Pie";
-            break;
-            case Bar:
-                s = "Bar";
-            break;
-            case Line:
-                s = "Line";
-            break;
-            default:
-                s = "";
-            break;
-        }
-
-        return s;
-    }
-};
-
-struct DataFormat {
-    enum {
-        JSON,
-        CSV,
-    } format;
-
-    QString asExtension() const {
-        QString ext;
-
-        switch (format) {
-            case JSON:
-                ext = "json";
-            break;
-            case CSV:
-                ext = "csv";
-            break;
-            default:
-                ext = "";
-            break;
-        }
-
-        return ext;
-    }
-};
-
-QVector<DataFormat> static const gSupportedDataFormats {{DataFormat::JSON}, {DataFormat::CSV}};
-QVector<ChartType> static const gSupportedChartTypes {{ChartType::Pie}, {ChartType::Bar}, {ChartType::Line}};
-QVector<ColorScheme> static const gSupportedColorSchemes {{ColorScheme::Light}, {ColorScheme::Dark}, {ColorScheme::BlueCerulean}};
-
-#endif // COMMON_HH
+#endif // __MKB_ALIASES_H

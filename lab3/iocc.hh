@@ -1,10 +1,8 @@
-#ifndef IOCC_HH
-#define IOCC_HH
-
 #pragma once
+
 #include <map>
-#include <typeinfo>
 #include <memory>
+#include <typeinfo>
 
 class IoCContainer {
     using type_hash = size_t;
@@ -28,5 +26,3 @@ public:
 };
 
 extern IoCContainer gIoCContainer;
-
-#endif // IOCC_HH
