@@ -1,5 +1,17 @@
 #include "charts.hh"
 
+QChart * IChartTemplate::operator () (ChartData const& cd, ColorScheme const& cs) {
+    auto series = this->generateSeries(cd);
+    auto chart = this->generateChart();
+    chart->addSeries(series);
+    chart->createDefaultAxes();
+    chart->layout()->setContentsMargins(0, 0, 0, 0);
+    chart->setBackgroundRoundness(0);
+
+    // set color scheme ...
+    return chart;
+}
+
 QString asString(ColorScheme scheme) {
     QString s; switch (scheme) {
         case Light: s = "Light"; break;

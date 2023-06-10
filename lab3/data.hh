@@ -22,6 +22,7 @@ struct IDataReadingStrategy {
 };
 
 
+// it might actually be the case that other modules do not need to know the concrete classes at all
 
 struct JSONStrategy: IDataReadingStrategy {
     virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;

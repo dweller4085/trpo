@@ -20,7 +20,7 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
         } model->setNameFilters(filters);
     }
 
-    model->setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+    model->setFilter(QDir::Files | QDir::NoSymLinks);
     model->setNameFilterDisables(false);
     model->setRootPath(QDir::currentPath());
 

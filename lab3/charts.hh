@@ -10,22 +10,14 @@ enum ColorScheme { Light, BW, BlueCerulean };
 enum ChartType { PieChart, BarChart, LineChart };
 
 struct IChartTemplate {
-    QChart * operator () (ChartData const& cd, ColorScheme const& cs) {
-        auto series = this->generateSeries(cd);
-        auto chart = this->generateChart();
-        chart->addSeries(series);
-        chart->createDefaultAxes();
-        chart->layout()->setContentsMargins(0, 0, 0, 0);
-        chart->setBackgroundRoundness(0);
-
-        // set color scheme ...
-        return chart;
-    }
+    QChart * operator () (ChartData const& cd, ColorScheme const& cs);
 
 protected:
     virtual QAbstractSeries * generateSeries(ChartData const&) = 0;
     virtual QChart * generateChart() = 0;
 };
+
+// it might actually be the case that other modules do not need to know the concrete classes at all
 
 struct BarChart: IChartTemplate {};
 struct PieChart: IChartTemplate {};
