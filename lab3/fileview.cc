@@ -16,9 +16,8 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
     {
         auto filters = QStringList {};
         for (auto format: gSupportedDataFormats) {
-            filters << "*." + format.asExtension();
-        }
-        model->setNameFilters(filters);
+            filters << "*." + extension(format);
+        } model->setNameFilters(filters);
     }
 
     model->setFilter(QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);

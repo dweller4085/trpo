@@ -14,27 +14,32 @@ struct ChartData {
     QVector<Point> points;
 };
 
-struct DataFormat {
-    enum { JSON, CSV, } format;
-
-    QString asExtension() const {
-        QString ext; switch (format) {
-            case JSON: ext = "json"; break;
-            case CSV: ext = "csv"; break;
-            default: ext = ""; break;
-        } return ext;
-    }
-};
+enum DataFormat { JSON, CSV, SQLITE };
 
 struct IDataReadingStrategy {
     virtual bool read(QString const& path, ChartData& data, QString& errorMsg) = 0;
     virtual ~IDataReadingStrategy() = default;
 };
 
-struct JSONStrategy: IDataReadingStrategy {};
-struct SQLiteStrategy: IDataReadingStrategy {};
-struct NullStrategy: IDataReadingStrategy {};
+
+
+struct JSONStrategy: IDataReadingStrategy {
+    virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
+};
+
+struct CSVStrategy: IDataReadingStrategy {
+    virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
+};
+
+struct SQLiteStrategy: IDataReadingStrategy {
+    virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
+};
+
+struct NullStrategy: IDataReadingStrategy {
+    virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
+};
 
 void updateStrategy(QFileInfo const&);
+QString extension(DataFormat format);
 
-QVector<DataFormat> inline static const gSupportedDataFormats {{DataFormat::JSON}, {DataFormat::CSV}};
+QVector<DataFormat> inline static const gSupportedDataFormats {DataFormat::JSON, DataFormat::CSV};

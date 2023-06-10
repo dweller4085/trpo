@@ -6,42 +6,11 @@
 
 #include "data.hh"
 
-struct ColorScheme {
-    enum { Light, BW, BlueCerulean, } scheme;
-
-    explicit operator QString() const {
-        QString s;
-
-        switch (scheme) {
-            case Light: s = "Light"; break;
-            case BW: s = "BW"; break;
-            case BlueCerulean: s = "Blue Cerulean"; break;
-            default: s = ""; break;
-        }
-
-        return s;
-    }
-};
-
-struct ChartType {
-    enum { Pie, Bar, Line, } type;
-
-    explicit operator QString() const {
-        QString s;
-
-        switch (type) {
-            case Pie: s = "Pie"; break;
-            case Bar: s = "Bar"; break;
-            case Line: s = "Line"; break;
-            default: s = ""; break;
-        }
-
-        return s;
-    }
-};
+enum ColorScheme { Light, BW, BlueCerulean };
+enum ChartType { PieChart, BarChart, LineChart };
 
 struct IChartTemplate {
-    QChart * createChart(ChartData const& cd, ColorScheme const& cs) {
+    QChart * operator () (ChartData const& cd, ColorScheme const& cs) {
         auto series = this->generateSeries(cd);
         auto chart = this->generateChart();
         chart->addSeries(series);
@@ -59,12 +28,12 @@ protected:
 };
 
 struct BarChart: IChartTemplate {};
-
 struct PieChart: IChartTemplate {};
-
 struct LineChart: IChartTemplate {};
-
 struct NullChart: IChartTemplate {};
 
-QVector<ChartType> inline static const gSupportedChartTypes {{ChartType::Pie}, {ChartType::Bar}, {ChartType::Line}};
-QVector<ColorScheme> inline static const gSupportedColorSchemes {{ColorScheme::Light}, {ColorScheme::BW}, {ColorScheme::BlueCerulean}};
+QString asString(ColorScheme scheme);
+QString asString(ChartType type);
+
+QVector<ChartType> inline static const gSupportedChartTypes {ChartType::PieChart, ChartType::BarChart, ChartType::LineChart};
+QVector<ColorScheme> inline static const gSupportedColorSchemes {ColorScheme::Light, ColorScheme::BW, ColorScheme::BlueCerulean};

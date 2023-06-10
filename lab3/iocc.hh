@@ -16,6 +16,12 @@ public:
     }
 
     template <typename I>
+    void registerService(std::shared_ptr<I> service) {
+        items.erase((typeid (I)).hash_code());
+        items.insert({{(typeid (I)).hash_code(), std::static_pointer_cast<void>(service)}});
+    }
+
+    template <typename I>
     std::shared_ptr<I> getService() {
         if (items.count((typeid (I)).hash_code())) {
             return std::static_pointer_cast<I>(items[(typeid (I)).hash_code()]);

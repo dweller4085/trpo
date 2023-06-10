@@ -27,7 +27,7 @@ private:
     QComboBox *   cbChartType;
     QComboBox *   cbColorScheme;
     QPushButton * pbSaveToPDF;
-    QLabel * infoLabel;
+    QLabel *      infoLabel;
     QVBoxLayout * layout;
 
     ColorScheme colorScheme;
