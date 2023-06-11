@@ -5,19 +5,27 @@
 
 namespace {
     struct JSONStrategy: IDataReadingStrategy {
-        virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
+        virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
+            return {};
+        }
     };
 
     struct CSVStrategy: IDataReadingStrategy {
-        virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
+        virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
+            return {};
+        }
     };
 
     struct SQLiteStrategy: IDataReadingStrategy {
-        virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
+        virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
+            return {};
+        }
     };
 
     struct NullStrategy: IDataReadingStrategy {
-        virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
+        virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
+            return false;
+        }
     };
 
     std::shared_ptr<IDataReadingStrategy> strategyFor(DataFormat format) {

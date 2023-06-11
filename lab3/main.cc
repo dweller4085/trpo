@@ -9,9 +9,6 @@
 IoCContainer gIoCContainer;
 
 int main (int argc, char ** argv) {
-    //gIoCContainer.registerService<IFileReadingStrategy, NullStrategy>();
-    //gIoCContainer.registerService<IChartTemplate, NullChart>();
-
     QApplication app {argc, argv};
     MainWindow window;
     window.show();

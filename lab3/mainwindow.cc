@@ -8,7 +8,7 @@
 MainWindow::MainWindow() {
     auto splitter = new QSplitter {this};
     this->fileView = new FileView {this};
-    this->chartView = new ChartView {this};
+    this->chartView = new ChartView {this, data};
 
     splitter->addWidget(fileView);
     splitter->addWidget(chartView);
@@ -23,6 +23,8 @@ MainWindow::MainWindow() {
 
     QObject::connect(fileView, &FileView::fileSelected, updateStrategy);
     QObject::connect(fileView, &FileView::fileSelected, this, &MainWindow::onFileSelected);
+    QObject::connect(this, &MainWindow::dataChanged, chartView, &ChartView::onDataChanged);
+    QObject::connect(this, &MainWindow::dataInvalidated, chartView, &ChartView::onDataInvalidated);
 }
 
 void MainWindow::onFileSelected(QFileInfo const& info) {

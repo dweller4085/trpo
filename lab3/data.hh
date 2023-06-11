@@ -8,9 +8,11 @@ struct ChartData {
     struct Point {
         float time;
         float value;
-        //QString category;
     };
 
+    QString timeAxis;
+    QString valueAxis;
+    QString name;
     QVector<Point> points;
 };
 
@@ -21,7 +23,7 @@ struct IDataReadingStrategy {
     virtual ~IDataReadingStrategy() = default;
 };
 
-void updateStrategy(QFileInfo const&);
+void updateStrategy(QFileInfo const& info);
 QString extension(DataFormat format);
 
-QVector<DataFormat> inline static const gSupportedDataFormats {DataFormat::JSON, DataFormat::CSV};
+inline static const QVector<DataFormat> gSupportedDataFormats {DataFormat::JSON, DataFormat::CSV};

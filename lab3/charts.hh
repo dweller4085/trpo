@@ -6,19 +6,22 @@
 
 #include "data.hh"
 
-enum class ColorScheme { Light, BW, BlueCerulean };
-enum class ChartType { PieChart, BarChart, LineChart };
+enum class ColorScheme { Light, Dark, BlueCerulean, BlackAndWhite };
+enum class ChartType { Pie, Bar, Line, Polar };
 
 struct IChartTemplate {
-    QChart * operator () (ChartData const& cd, ColorScheme const& cs);
+    QChart * build (ChartData const& cd, ColorScheme const& cs);
 
 protected:
-    virtual QAbstractSeries * generateSeries(ChartData const&) = 0;
-    virtual QChart * generateChart() = 0;
+    virtual QAbstractSeries * createSeries(ChartData const&) = 0;
+    virtual QChart * createChart() = 0;
 };
 
 QString asString(ColorScheme scheme);
 QString asString(ChartType type);
 
-QVector<ChartType> inline static const gSupportedChartTypes {ChartType::PieChart, ChartType::BarChart, ChartType::LineChart};
-QVector<ColorScheme> inline static const gSupportedColorSchemes {ColorScheme::Light, ColorScheme::BW, ColorScheme::BlueCerulean};
+void updateTemplate(ChartType);
+void setColorScheme(QChart * chart, ColorScheme scheme);
+
+inline static const QVector<ChartType> gSupportedChartTypes {ChartType::Pie, ChartType::Bar, ChartType::Line};
+inline static const QVector<ColorScheme> gSupportedColorSchemes {ColorScheme::Light, ColorScheme::Dark, ColorScheme::BlueCerulean};

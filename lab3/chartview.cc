@@ -1,44 +1,78 @@
 #include "chartview.hh"
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QLabel>
 
 #include <QtCharts/QPieSeries>
 #include <QtCharts/QChart>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <QPdfWriter>
 
-ChartView::ChartView(QWidget * parent): QWidget {parent} {
-    layout = new QVBoxLayout {this};
+#include "iocc.hh"
+
+ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent}, data {data} {
     chartView = new QChartView {};
     cbChartType = new QComboBox {};
     cbColorScheme = new QComboBox {};
+    infoLabel = new QLabel {};
     pbSaveToPDF = new QPushButton {"save to pdf"};
-    auto buttons = new QHBoxLayout {};
-    auto chart = new QChart {};
-    //chartType->setMinimumWidth(100);
-    //colorScheme->setMinimumWidth(100);
+    sharedView = new QStackedWidget {};
 
-    chart->layout()->setContentsMargins(0, 0, 0, 0);
-    chart->setBackgroundRoundness(0);
+    auto layout = new QVBoxLayout {this};
+    auto buttons = new QHBoxLayout {};
 
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setFrameStyle(QFrame::StyledPanel);
-    chartView->setChart(chart);
+    //chartView->setChart(chart);
+    chartView->chart()->setContentsMargins(0, 0, 0, 0);
+    chartView->chart()->setBackgroundRoundness(0);
 
     buttons->addWidget(cbChartType);
     buttons->addWidget(cbColorScheme);
     buttons->addStretch();
     buttons->addWidget(pbSaveToPDF);
 
-    layout->addWidget(chartView);
+    sharedView->addWidget(chartView);
+    sharedView->addWidget(infoLabel);
+
+    layout->addWidget(sharedView);
     layout->addLayout(buttons);
 
     this->setMinimumWidth(360);
+
+    QObject::connect(pbSaveToPDF, &QPushButton::clicked, this, &ChartView::onPbSaveToPDFPressed);
 }
 
-void ChartView::onDataChanged(ChartData const& data) {
-    // draw/redraw the chart with the template in gIoCC
+void ChartView::drawChart() {
+    auto chart = gIoCContainer.getService<IChartTemplate>()->build(data, colorScheme);
+    chartView->setChart(chart);
+    sharedView->setCurrentIndex(Chart);
 }
 
-void ChartView::onDataInvalidated(QFileInfo const& data) {
-    // change/hide/replace the chartView with a red QLabel in the layout
+void ChartView::onDataChanged() {
+    drawChart();
+}
+
+void ChartView::onDataInvalidated(QString const& errorMsg) {
+    infoLabel->setText(errorMsg);
+    infoLabel->setStyleSheet("{color: #AA1010}");
+    sharedView->setCurrentIndex(Info);
+}
+
+void ChartView::onChartTypeChanged(ChartType type) {
+    updateTemplate(type);
+    drawChart();
+}
+
+void ChartView::onColorSchemeChanged(ColorScheme scheme) {
+    setColorScheme(chartView->chart(), scheme);
+}
+
+void ChartView::onPbSaveToPDFPressed() {
+    auto filePath = QFileDialog::getSaveFileName(nullptr, "Save chart as PDF", {}, "PDF (*.pdf)");
+    if (filePath.isEmpty()) return;
+
+    auto pdfWriter = QPdfWriter {filePath};
+    auto painter = QPainter {&pdfWriter};
+    chartView->render(&painter);
+    painter.end();
 }
