@@ -14,7 +14,7 @@ public:
     MainWindow();
 
 signals:
-    void dataChanged(ChartData const&);
+    void dataChanged();
     void dataInvalidated(QString const&);
 
 public slots:

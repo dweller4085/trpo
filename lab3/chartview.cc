@@ -20,19 +20,34 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
     auto layout = new QVBoxLayout {this};
     auto buttons = new QHBoxLayout {};
 
+    cbChartType->setEditable(false);
+    cbColorScheme->setEditable(false);
+
+    for (auto type: gSupportedChartTypes) {
+        cbChartType->addItem(asString(type));
+    }
+
+    for (auto scheme: gSupportedColorSchemes) {
+        cbColorScheme->addItem(asString(scheme));
+    }
+
+    cbChartType->setDisabled(true);
+    cbColorScheme->setDisabled(true);
+    pbSaveToPDF->setDisabled(true);
+
+    infoLabel->setAlignment(Qt::AlignCenter);
+    infoLabel->setText("Select a file with chart data.");
+
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setFrameStyle(QFrame::StyledPanel);
-    //chartView->setChart(chart);
-    chartView->chart()->setContentsMargins(0, 0, 0, 0);
-    chartView->chart()->setBackgroundRoundness(0);
 
     buttons->addWidget(cbChartType);
     buttons->addWidget(cbColorScheme);
     buttons->addStretch();
     buttons->addWidget(pbSaveToPDF);
 
-    sharedView->addWidget(chartView);
     sharedView->addWidget(infoLabel);
+    sharedView->addWidget(chartView);
 
     layout->addWidget(sharedView);
     layout->addLayout(buttons);
@@ -45,7 +60,10 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
 void ChartView::drawChart() {
     auto chart = gIoCContainer.getService<IChartTemplate>()->build(data, colorScheme);
     chartView->setChart(chart);
-    sharedView->setCurrentIndex(Chart);
+    sharedView->setCurrentIndex((int)SharedView::Chart);
+    cbChartType->setDisabled(false);
+    cbColorScheme->setDisabled(false);
+    pbSaveToPDF->setDisabled(false);
 }
 
 void ChartView::onDataChanged() {
@@ -54,8 +72,11 @@ void ChartView::onDataChanged() {
 
 void ChartView::onDataInvalidated(QString const& errorMsg) {
     infoLabel->setText(errorMsg);
-    infoLabel->setStyleSheet("{color: #AA1010}");
-    sharedView->setCurrentIndex(Info);
+    infoLabel->setStyleSheet("QLabel {color: #AA1010;}");
+    sharedView->setCurrentIndex((int)SharedView::Info);
+    cbChartType->setDisabled(true);
+    cbColorScheme->setDisabled(true);
+    pbSaveToPDF->setDisabled(true);
 }
 
 void ChartView::onChartTypeChanged(ChartType type) {

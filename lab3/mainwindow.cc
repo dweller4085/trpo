@@ -32,7 +32,7 @@ void MainWindow::onFileSelected(QFileInfo const& info) {
     auto errorMsg = QString {};
 
     if (readingStrategy->read(info.absoluteFilePath(), this->data, errorMsg)) {
-        emit MainWindow::dataChanged(data);
+        emit MainWindow::dataChanged();
     } else {
         emit MainWindow::dataInvalidated(errorMsg);
     }

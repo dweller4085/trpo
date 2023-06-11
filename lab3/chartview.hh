@@ -40,8 +40,8 @@ private:
 
     ChartData const& data;
 
-    enum {
-        Chart,
+    enum class SharedView {
         Info,
+        Chart,
     };
 };
