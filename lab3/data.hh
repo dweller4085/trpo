@@ -14,30 +14,11 @@ struct ChartData {
     QVector<Point> points;
 };
 
-enum DataFormat { JSON, CSV, SQLITE };
+enum class DataFormat { JSON, CSV, SQLITE };
 
 struct IDataReadingStrategy {
     virtual bool read(QString const& path, ChartData& data, QString& errorMsg) = 0;
     virtual ~IDataReadingStrategy() = default;
-};
-
-
-// it might actually be the case that other modules do not need to know the concrete classes at all
-
-struct JSONStrategy: IDataReadingStrategy {
-    virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
-};
-
-struct CSVStrategy: IDataReadingStrategy {
-    virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
-};
-
-struct SQLiteStrategy: IDataReadingStrategy {
-    virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
-};
-
-struct NullStrategy: IDataReadingStrategy {
-    virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override;
 };
 
 void updateStrategy(QFileInfo const&);
