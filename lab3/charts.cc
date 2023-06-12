@@ -3,7 +3,7 @@
 
 namespace {
     struct PieChart: IChartTemplate {
-        virtual QAbstractSeries * createSeries(ChartData const& data, QString& errMsg) override {
+        virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) override {
             auto series = new QPieSeries {};
 
             for (auto point: data.points) {
@@ -14,57 +14,19 @@ namespace {
                     series->append(point.key, value);
                 } else {
                     errMsg = "Pie chart only supports data of format (string, real).";
-                    return nullptr;
+                    return false;
                 }
             }
 
-            return series;
-        }
-
-        virtual QChart * createChart(ChartData const& data, QAbstractSeries * series) override {
-            auto chart = new QChart {};
             chart->addSeries(series);
             chart->legend()->show();
 
-            return chart;
+            return true;
         }
     };
 
     struct ScatterChart: IChartTemplate {
-        virtual QAbstractSeries * createSeries(ChartData const& data, QString& errMsg) override {
-            // this was going to be a barset, but started to get way too complicated
-            /*
-            auto barset = new QBarSet {{}};
-            auto series = new QBarSeries {};
-
-            int const segmentCnt = std::min(data.points.length(), 18);
-
-            // check that we have only reals in (K, V) pairs; and that keys are ordered asc.
-            float prevKey = -10e6;
-            for (auto point: data.points) {
-                bool okK = true;
-                bool okV = true;
-                float currKey = point.key.toFloat(&okK);
-                point.value.toFloat(&okV);
-                if (!okK || !okV) {
-                    errMsg = "Bar chart only supports data of format (real, real).";
-                    return nullptr;
-                } else if (currKey < prevKey) {
-                    errMsg = "Bar chart only supports real key-value pairs, sorted by key ascending.";
-                    return nullptr;
-                }
-            }
-
-            float minX = data.points.first().key.toFloat(&oka);
-            float maxX = data.points.last().key.toFloat(&okb);
-
-            int j = 0;
-            for (int i = 0; i < segmentCnt; i += 1) {
-                int k = 0;
-
-            }
-            */
-
+        virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) override {
             auto series = new QScatterSeries {};
             series->setMarkerShape(QScatterSeries::MarkerShapeCircle);
             series->setMarkerSize(20.0);
@@ -80,28 +42,22 @@ namespace {
                     series->append({x, y});
                 } else {
                     errMsg = "Scatter plot only supports data of format (real, real).";
-                    return nullptr;
+                    return false;
                 }
             }
 
-
-            return series;
-        }
-
-        virtual QChart * createChart(ChartData const& data, QAbstractSeries * series) override {
-            auto chart = new QChart {};
             chart->addSeries(series);
             chart->createDefaultAxes();
             chart->axes(Qt::Horizontal).first()->setTitleText(data.keyAxisTitle);
             chart->axes(Qt::Vertical).first()->setTitleText(data.valueAxisTitle);
             chart->legend()->hide();
 
-            return chart;
+            return true;
         }
     };
 
     struct LineChart: IChartTemplate {
-        virtual QAbstractSeries * createSeries(ChartData const& data, QString& errMsg) override {
+        virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) override {
             auto series = new QLineSeries {};
 
             for (auto point: data.points) {
@@ -115,31 +71,23 @@ namespace {
                     series->append({x, y});
                 } else {
                     errMsg = "Line chart only supports data of format (real, real).";
-                    return nullptr;
+                    return false;
                 }
             }
 
-            return series;
-        }
-
-        virtual QChart * createChart(ChartData const& data, QAbstractSeries * series) override {
-            auto chart = new QChart {};
             chart->addSeries(series);
             chart->createDefaultAxes();
             chart->axes(Qt::Horizontal).first()->setTitleText(data.keyAxisTitle);
             chart->axes(Qt::Vertical).first()->setTitleText(data.valueAxisTitle);
             chart->legend()->hide();
-            return chart;
+
+            return true;
         }
     };
 
     struct NullChart: IChartTemplate {
-        virtual QAbstractSeries * createSeries(ChartData const&, QString&) override {
-            return {};
-        }
-
-        virtual QChart * createChart(ChartData const&, QAbstractSeries *) override {
-            return {};
+        virtual bool setupChart(QChart *, ChartData const&, QString&) override {
+            return true;
         }
     };
 
@@ -151,21 +99,24 @@ namespace {
             default: return std::make_shared<NullChart>(); break;
         }
     }
+
+    void clearChart(QChart * chart) {
+        chart->removeAllSeries();
+        for (auto axis: chart->axes()) {
+            chart->removeAxis(axis);
+        }
+    }
 }
 
-QChart * IChartTemplate::build(ChartData const& cd, ColorScheme cs, QString& errMsg) {
-    auto series = this->createSeries(cd, errMsg);
-    if (!series) return nullptr;
+bool IChartTemplate::build(QChart * chart, ChartData const& data, ColorScheme colorScheme, QString& errMsg) {
+    clearChart(chart);
 
-    auto chart = this->createChart(cd, series);
+    if (!this->setupChart(chart, data, errMsg)) return false;
 
-    chart->layout()->setContentsMargins(0, 0, 0, 0);
-    chart->setBackgroundRoundness(0);
-    chart->setTitle(cd.chartTitle);
+    chart->setTitle(data.chartTitle);
+    applyColorScheme(chart, colorScheme);
 
-    applyColorScheme(chart, cs);
-
-    return chart;
+    return true;
 }
 
 QString asString(ColorScheme scheme) {

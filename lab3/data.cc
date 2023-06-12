@@ -6,7 +6,6 @@
 namespace {
     struct JSONStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            // for debugging purposes
             data.points = {{"A", "1"}, {"B", "2"}, {"C", "3"}, {"D", "1"}};
             data.chartTitle = "JSON";
             return true;
@@ -15,7 +14,6 @@ namespace {
 
     struct CSVStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            // for debugging purposes
             data.points = {{"1", "1"}, {"2", "2"}, {"3", "3"}, {"4", "2"}};
             data.chartTitle = "CSV";
             data.keyAxisTitle = "ms";

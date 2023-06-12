@@ -18,6 +18,10 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
     sharedView    = new QStackedWidget {};
     auto layout   = new QVBoxLayout {this};
     auto buttons  = new QHBoxLayout {};
+    auto chart    = new QChart {};
+
+    chart->layout()->setContentsMargins(0, 0, 0, 0);
+    chart->setBackgroundRoundness(0);
 
     cbChartType->setEditable(false);
     cbColorScheme->setEditable(false);
@@ -45,6 +49,7 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
 
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setFrameStyle(QFrame::StyledPanel);
+    chartView->setChart(chart);
 
 
     auto cbChartTypeLabel = new QLabel {"chart type:"};
@@ -78,10 +83,12 @@ void ChartView::drawChart() {
     cbColorScheme->setDisabled(false);
     pbSaveToPDF->setDisabled(false);
 
-    auto errMsg = QString {};
-    auto chart = gIoCContainer.getService<IChartTemplate>()->build(data, colorScheme, errMsg);
+    sharedView->setCurrentIndex((int)SharedView::Chart);
 
-    if (!chart) {
+    auto errMsg = QString {};
+    auto chartTemplate = gIoCContainer.getService<IChartTemplate>();
+
+    if (!chartTemplate->build(chartView->chart(), data, colorScheme, errMsg)) {
         ChartView::displayMessage(
             QString {} +
             "Could not build a " +
@@ -94,16 +101,7 @@ void ChartView::drawChart() {
 
         cbColorScheme->setDisabled(true);
         pbSaveToPDF->setDisabled(true);
-
-        return;
     }
-
-    //auto oldChart = chartView->chart();
-    chartView->setChart(chart);
-    //if (oldChart) delete oldChart;
-
-    sharedView->setCurrentIndex((int)SharedView::Chart);
-
 }
 
 void ChartView::onDataChanged() {

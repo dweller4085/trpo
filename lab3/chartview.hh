@@ -23,8 +23,8 @@ public slots:
 private slots:
     void onChartTypeChanged(ChartType);
     void onColorSchemeChanged(ColorScheme);
-    void onPbSaveToPDFPressed();
 
+    void onPbSaveToPDFPressed();
     void onCbChartTypeIndexChanged(int index);
     void onCbColorSchemeIndexChanged(int index);
 
