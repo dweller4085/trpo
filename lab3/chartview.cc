@@ -46,9 +46,16 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setFrameStyle(QFrame::StyledPanel);
 
-    buttons->addWidget(new QLabel {"chart type:"});
+
+    auto cbChartTypeLabel = new QLabel {"chart type:"};
+    cbChartTypeLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    auto cbColorSchemeLabel = new QLabel {"color scheme:"};
+    cbColorSchemeLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+
+    buttons->addWidget(cbChartTypeLabel);
     buttons->addWidget(cbChartType);
-    buttons->addWidget(new QLabel {"color scheme:"});
+    buttons->addWidget(cbColorSchemeLabel);
     buttons->addWidget(cbColorScheme);
     buttons->addStretch();
     buttons->addWidget(pbSaveToPDF);

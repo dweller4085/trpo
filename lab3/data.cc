@@ -7,10 +7,8 @@ namespace {
     struct JSONStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
             // for debugging purposes
-            data.points = {{"1", "1"}, {"2", "0"}, {"3", "3"}, {"4", "1"}};
+            data.points = {{"A", "1"}, {"B", "2"}, {"C", "3"}, {"D", "1"}};
             data.chartTitle = "JSON";
-            data.keyAxisTitle = "h";
-            data.valueAxisTitle = "";
             return true;
         }
     };

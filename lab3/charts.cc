@@ -4,11 +4,29 @@
 namespace {
     struct PieChart: IChartTemplate {
         virtual QAbstractSeries * createSeries(ChartData const& data, QString& errMsg) override {
-            return {};
+            auto series = new QPieSeries {};
+
+            for (auto point: data.points) {
+                auto ok = bool {true};
+                auto value {point.value.toFloat(&ok)};
+
+                if (ok) {
+                    series->append(point.key, value);
+                } else {
+                    errMsg = "Pie chart only supports data of format (string, real).";
+                    return nullptr;
+                }
+            }
+
+            return series;
         }
 
         virtual QChart * createChart(ChartData const& data, QAbstractSeries * series) override {
-            return {};
+            auto chart = new QChart {};
+            chart->addSeries(series);
+            chart->legend()->show();
+
+            return chart;
         }
     };
 
@@ -53,6 +71,7 @@ namespace {
             chart->createDefaultAxes();
             chart->axes(Qt::Horizontal).first()->setTitleText(data.keyAxisTitle);
             chart->axes(Qt::Vertical).first()->setTitleText(data.valueAxisTitle);
+            chart->legend()->hide();
             return chart;
         }
     };
@@ -85,7 +104,6 @@ QChart * IChartTemplate::build(ChartData const& cd, ColorScheme cs, QString& err
 
     chart->layout()->setContentsMargins(0, 0, 0, 0);
     chart->setBackgroundRoundness(0);
-    chart->legend()->hide();
     chart->setTitle(cd.chartTitle);
 
     applyColorScheme(chart, cs);
