@@ -25,6 +25,9 @@ private slots:
     void onColorSchemeChanged(ColorScheme);
     void onPbSaveToPDFPressed();
 
+    void onCbChartTypeIndexChanged(int index);
+    void onCbColorSchemeIndexChanged(int index);
+
 private:
     void drawChart();
 

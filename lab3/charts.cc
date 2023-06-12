@@ -23,12 +23,18 @@ namespace {
     };
 
     struct LineChart: IChartTemplate {
-        virtual QAbstractSeries * createSeries(ChartData const&) override {
-            return {};
+        virtual QAbstractSeries * createSeries(ChartData const& data) override {
+            auto lineSeries = new QLineSeries {};
+
+            for (auto point: data.points) {
+                lineSeries->append({point.time, point.value});
+            }
+
+            return lineSeries;
         }
 
         virtual QChart * createChart() override {
-            return {};
+            return new QChart {};
         }
     };
 
@@ -60,7 +66,7 @@ QChart * IChartTemplate::build(ChartData const& cd, ColorScheme const& cs) {
     chart->layout()->setContentsMargins(0, 0, 0, 0);
     chart->setBackgroundRoundness(0);
 
-    setColorScheme(chart, cs);
+    applyColorScheme(chart, cs);
     return chart;
 }
 
@@ -87,6 +93,6 @@ void updateTemplate(ChartType type) {
     gIoCContainer.registerService<IChartTemplate>(templateFor(type));
 }
 
-void setColorScheme(QChart * chart, ColorScheme scheme) {
+void applyColorScheme(QChart * chart, ColorScheme scheme) {
 
 }

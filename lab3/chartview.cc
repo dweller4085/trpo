@@ -22,6 +22,8 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
 
     cbChartType->setEditable(false);
     cbColorScheme->setEditable(false);
+    cbChartType->setMinimumWidth(80);
+    cbColorScheme->setMinimumWidth(80);
 
     for (auto type: gSupportedChartTypes) {
         cbChartType->addItem(asString(type));
@@ -30,6 +32,9 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
     for (auto scheme: gSupportedColorSchemes) {
         cbColorScheme->addItem(asString(scheme));
     }
+
+    cbChartType->setCurrentIndex(2);
+    updateTemplate(ChartType::Line);
 
     cbChartType->setDisabled(true);
     cbColorScheme->setDisabled(true);
@@ -55,6 +60,8 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
     this->setMinimumWidth(360);
 
     QObject::connect(pbSaveToPDF, &QPushButton::clicked, this, &ChartView::onPbSaveToPDFPressed);
+    QObject::connect(cbChartType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ChartView::onCbChartTypeIndexChanged);
+    QObject::connect(cbColorScheme, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ChartView::onCbColorSchemeIndexChanged);
 }
 
 void ChartView::drawChart() {
@@ -85,7 +92,7 @@ void ChartView::onChartTypeChanged(ChartType type) {
 }
 
 void ChartView::onColorSchemeChanged(ColorScheme scheme) {
-    setColorScheme(chartView->chart(), scheme);
+    applyColorScheme(chartView->chart(), scheme);
 }
 
 void ChartView::onPbSaveToPDFPressed() {
@@ -96,4 +103,12 @@ void ChartView::onPbSaveToPDFPressed() {
     auto painter = QPainter {&pdfWriter};
     chartView->render(&painter);
     painter.end();
+}
+
+void ChartView::onCbChartTypeIndexChanged(int index) {
+    onChartTypeChanged(gSupportedChartTypes[index]);
+}
+
+void ChartView::onCbColorSchemeIndexChanged(int index) {
+    onColorSchemeChanged(gSupportedColorSchemes[index]);
 }

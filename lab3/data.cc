@@ -12,7 +12,9 @@ namespace {
 
     struct CSVStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            return {};
+            // for debug purposes
+            data.points = {{1, 1}, {2, 2}, {3, 3}, {4, 2}};
+            return true;
         }
     };
 
