@@ -30,16 +30,73 @@ namespace {
         }
     };
 
-    struct BarChart: IChartTemplate {
+    struct ScatterChart: IChartTemplate {
         virtual QAbstractSeries * createSeries(ChartData const& data, QString& errMsg) override {
-            //auto series = new QBarSeries {};
-            //auto barset = new QBarSet {};
+            // this was going to be a barset, but started to get way too complicated
+            /*
+            auto barset = new QBarSet {{}};
+            auto series = new QBarSeries {};
 
-            return {};
+            int const segmentCnt = std::min(data.points.length(), 18);
+
+            // check that we have only reals in (K, V) pairs; and that keys are ordered asc.
+            float prevKey = -10e6;
+            for (auto point: data.points) {
+                bool okK = true;
+                bool okV = true;
+                float currKey = point.key.toFloat(&okK);
+                point.value.toFloat(&okV);
+                if (!okK || !okV) {
+                    errMsg = "Bar chart only supports data of format (real, real).";
+                    return nullptr;
+                } else if (currKey < prevKey) {
+                    errMsg = "Bar chart only supports real key-value pairs, sorted by key ascending.";
+                    return nullptr;
+                }
+            }
+
+            float minX = data.points.first().key.toFloat(&oka);
+            float maxX = data.points.last().key.toFloat(&okb);
+
+            int j = 0;
+            for (int i = 0; i < segmentCnt; i += 1) {
+                int k = 0;
+
+            }
+            */
+
+            auto series = new QScatterSeries {};
+            series->setMarkerShape(QScatterSeries::MarkerShapeCircle);
+            series->setMarkerSize(20.0);
+
+            for (auto point: data.points) {
+                bool okx = true;
+                bool oky = true;
+
+                float x = point.key.toFloat(&okx);
+                float y = point.value.toFloat(&oky);
+
+                if (okx && oky) {
+                    series->append({x, y});
+                } else {
+                    errMsg = "Scatter plot only supports data of format (real, real).";
+                    return nullptr;
+                }
+            }
+
+
+            return series;
         }
 
         virtual QChart * createChart(ChartData const& data, QAbstractSeries * series) override {
-            return {};
+            auto chart = new QChart {};
+            chart->addSeries(series);
+            chart->createDefaultAxes();
+            chart->axes(Qt::Horizontal).first()->setTitleText(data.keyAxisTitle);
+            chart->axes(Qt::Vertical).first()->setTitleText(data.valueAxisTitle);
+            chart->legend()->hide();
+
+            return chart;
         }
     };
 
@@ -89,7 +146,7 @@ namespace {
     std::shared_ptr<IChartTemplate> templateFor(ChartType type) {
         switch (type) {
             case ChartType::Pie: return std::make_shared<PieChart>(); break;
-            case ChartType::Bar: return std::make_shared<BarChart>(); break;
+            case ChartType::Scatter: return std::make_shared<ScatterChart>(); break;
             case ChartType::Line: return std::make_shared<LineChart>(); break;
             default: return std::make_shared<NullChart>(); break;
         }
@@ -123,7 +180,7 @@ QString asString(ColorScheme scheme) {
 QString asString(ChartType type) {
     QString s; switch (type) {
         case ChartType::Pie: s = "Pie"; break;
-        case ChartType::Bar: s = "Bar"; break;
+        case ChartType::Scatter: s = "Scatter"; break;
         case ChartType::Line: s = "Line"; break;
         default: s = ""; break;
     } return s;
