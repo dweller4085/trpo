@@ -91,9 +91,9 @@ void ChartView::drawChart() {
         return;
     }
 
-    auto oldChart = chartView->chart();
+    //auto oldChart = chartView->chart();
     chartView->setChart(chart);
-    delete oldChart;
+    //if (oldChart) delete oldChart;
 
     sharedView->setCurrentIndex((int)SharedView::Chart);
 

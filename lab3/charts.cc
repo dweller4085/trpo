@@ -8,7 +8,7 @@ namespace {
         }
 
         virtual QChart * createChart(ChartData const& data, QAbstractSeries * series) override {
-            return new QChart {};
+            return {};
         }
     };
 
@@ -51,8 +51,8 @@ namespace {
             auto chart = new QChart {};
             chart->addSeries(series);
             chart->createDefaultAxes();
-            chart->axisX()->setTitleText(data.keyAxisTitle);
-            chart->axisY()->setTitleText(data.valueAxisTitle);
+            chart->axes(Qt::Horizontal).first()->setTitleText(data.keyAxisTitle);
+            chart->axes(Qt::Vertical).first()->setTitleText(data.valueAxisTitle);
             return chart;
         }
     };
