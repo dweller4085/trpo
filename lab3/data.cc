@@ -26,6 +26,7 @@ namespace {
 
     struct NullStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
+            errorMsg = "NullStrategy: IDataReadingStrategy";
             return false;
         }
     };

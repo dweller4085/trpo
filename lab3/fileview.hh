@@ -6,8 +6,6 @@
 #include <QFileInfo>
 #include <QWidget>
 
-// crashes on list item double-click!!!
-
 class FileView: public QWidget { Q_OBJECT
 public:
     explicit FileView(QWidget * parent);

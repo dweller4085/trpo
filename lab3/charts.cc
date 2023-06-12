@@ -7,7 +7,7 @@ namespace {
             return {};
         }
 
-        virtual QChart * createChart() override {
+        virtual QChart * createChart(QAbstractSeries * series) override {
             return {};
         }
     };
@@ -17,7 +17,7 @@ namespace {
             return {};
         }
 
-        virtual QChart * createChart() override {
+        virtual QChart * createChart(QAbstractSeries * series) override {
             return {};
         }
     };
@@ -33,8 +33,11 @@ namespace {
             return lineSeries;
         }
 
-        virtual QChart * createChart() override {
-            return new QChart {};
+        virtual QChart * createChart(QAbstractSeries * series) override {
+            auto chart = new QChart {};
+            chart->addSeries(series);
+            chart->createDefaultAxes();
+            return chart;
         }
     };
 
@@ -43,8 +46,8 @@ namespace {
             return {};
         }
 
-        virtual QChart * createChart() override {
-            return {};
+        virtual QChart * createChart(QAbstractSeries * series) override {
+            return new QChart {};
         }
     };
 
@@ -58,13 +61,12 @@ namespace {
     }
 }
 
-QChart * IChartTemplate::build(ChartData const& cd, ColorScheme const& cs) {
+QChart * IChartTemplate::build(ChartData const& cd, ColorScheme cs) {
     auto series = this->createSeries(cd);
-    auto chart = this->createChart();
-    chart->addSeries(series);
-    chart->createDefaultAxes();
+    auto chart = this->createChart(series);
     chart->layout()->setContentsMargins(0, 0, 0, 0);
     chart->setBackgroundRoundness(0);
+    chart->legend()->hide();
 
     applyColorScheme(chart, cs);
     return chart;
@@ -73,7 +75,6 @@ QChart * IChartTemplate::build(ChartData const& cd, ColorScheme const& cs) {
 QString asString(ColorScheme scheme) {
     QString s; switch (scheme) {
         case ColorScheme::Light: s = "Light"; break;
-        case ColorScheme::Dark: s = "Dark"; break;
         case ColorScheme::BlueCerulean: s = "Blue Cerulean"; break;
         case ColorScheme::BlackAndWhite: s = "Black&White"; break;
         default: s = ""; break;
@@ -94,5 +95,20 @@ void updateTemplate(ChartType type) {
 }
 
 void applyColorScheme(QChart * chart, ColorScheme scheme) {
-
+    switch (scheme) {
+        case ColorScheme::Light: {
+            chart->setTheme(QChart::ChartThemeLight);
+            chart->setGraphicsEffect(nullptr);
+        } break;
+        case ColorScheme::BlueCerulean: {
+            chart->setTheme(QChart::ChartThemeBlueCerulean);
+            chart->setGraphicsEffect(nullptr);
+        } break;
+        case ColorScheme::BlackAndWhite: {
+            auto graphicsEffect = new QGraphicsColorizeEffect {};
+            graphicsEffect->setColor(Qt::black);
+            chart->setTheme(QChart::ChartThemeLight);
+            chart->setGraphicsEffect(graphicsEffect);
+        } break;
+    }
 }

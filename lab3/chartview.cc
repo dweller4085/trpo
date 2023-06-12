@@ -33,20 +33,23 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
         cbColorScheme->addItem(asString(scheme));
     }
 
-    cbChartType->setCurrentIndex(2);
-    updateTemplate(ChartType::Line);
+    //cbChartType->setCurrentIndex((int) ChartType::Line);
+    updateTemplate(gSupportedChartTypes.first());
 
     cbChartType->setDisabled(true);
     cbColorScheme->setDisabled(true);
     pbSaveToPDF->setDisabled(true);
 
     infoLabel->setAlignment(Qt::AlignCenter);
+    infoLabel->setFrameStyle(QFrame::StyledPanel);
     infoLabel->setText("Select a file with chart data.");
 
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setFrameStyle(QFrame::StyledPanel);
 
+    buttons->addWidget(new QLabel {"chart type:"});
     buttons->addWidget(cbChartType);
+    buttons->addWidget(new QLabel {"color scheme:"});
     buttons->addWidget(cbColorScheme);
     buttons->addStretch();
     buttons->addWidget(pbSaveToPDF);
@@ -66,6 +69,7 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
 
 void ChartView::drawChart() {
     auto chart = gIoCContainer.getService<IChartTemplate>()->build(data, colorScheme);
+    //delete chartView->chart();
     chartView->setChart(chart);
     sharedView->setCurrentIndex((int)SharedView::Chart);
     cbChartType->setDisabled(false);
