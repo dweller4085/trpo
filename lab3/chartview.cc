@@ -10,15 +10,14 @@
 #include "iocc.hh"
 
 ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent}, data {data} {
-    chartView = new QChartView {};
-    cbChartType = new QComboBox {};
+    chartView     = new QChartView {};
+    cbChartType   = new QComboBox {};
     cbColorScheme = new QComboBox {};
-    infoLabel = new QLabel {};
-    pbSaveToPDF = new QPushButton {"save to pdf"};
-    sharedView = new QStackedWidget {};
-
-    auto layout = new QVBoxLayout {this};
-    auto buttons = new QHBoxLayout {};
+    infoLabel     = new QLabel {};
+    pbSaveToPDF   = new QPushButton {"save to pdf"};
+    sharedView    = new QStackedWidget {};
+    auto layout   = new QVBoxLayout {this};
+    auto buttons  = new QHBoxLayout {};
 
     cbChartType->setEditable(false);
     cbColorScheme->setEditable(false);
@@ -33,9 +32,7 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
         cbColorScheme->addItem(asString(scheme));
     }
 
-    //cbChartType->setCurrentIndex((int) ChartType::Line);
     updateTemplate(gSupportedChartTypes.first());
-
 
     infoLabel->setAlignment(Qt::AlignCenter);
     infoLabel->setFrameStyle(QFrame::StyledPanel);
@@ -62,7 +59,7 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
     layout->addWidget(sharedView);
     layout->addLayout(buttons);
 
-    this->setMinimumWidth(360);
+    this->setMinimumWidth(420);
 
     QObject::connect(pbSaveToPDF, &QPushButton::clicked, this, &ChartView::onPbSaveToPDFPressed);
     QObject::connect(cbChartType, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &ChartView::onCbChartTypeIndexChanged);
@@ -74,14 +71,17 @@ void ChartView::drawChart() {
     cbColorScheme->setDisabled(false);
     pbSaveToPDF->setDisabled(false);
 
-    auto chart = gIoCContainer.getService<IChartTemplate>()->build(data, colorScheme);
+    auto errMsg = QString {};
+    auto chart = gIoCContainer.getService<IChartTemplate>()->build(data, colorScheme, errMsg);
 
     if (!chart) {
         ChartView::displayMessage(
             QString {} +
             "Could not build a " +
             asString(chartType) +
-            " chart with this data.\nPerhaps some other chart type supports this data format?",
+            " chart with this data.\n" +
+            "Hint: " + errMsg +
+            "\nPerhaps some other chart type supports this data format?",
             MessageType::Error
         );
 

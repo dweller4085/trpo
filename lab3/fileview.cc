@@ -31,7 +31,7 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
 
     layout->addWidget(view);
     layout->addWidget(pbOpenFolder);
-    this->setMinimumWidth(300);
+    this->setMinimumWidth(220);
 
     QObject::connect(view, &QListView::activated, this, &FileView::onFileSelected);
     QObject::connect(pbOpenFolder, &QPushButton::clicked, this, &FileView::onPbOpenFolderClicked);

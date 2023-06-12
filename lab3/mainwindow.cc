@@ -5,7 +5,7 @@
 #include "data.hh"
 #include "iocc.hh"
 
-MainWindow::MainWindow() {
+MainWindow::MainWindow(): QMainWindow {nullptr} {
     auto splitter = new QSplitter {this};
     this->fileView = new FileView {this};
     this->chartView = new ChartView {this, data};
@@ -19,7 +19,7 @@ MainWindow::MainWindow() {
 
     setCentralWidget(splitter);
 
-    setMinimumHeight(400);
+    resize(700, 450);
 
     QObject::connect(fileView, &FileView::fileSelected, updateStrategy);
     QObject::connect(fileView, &FileView::fileSelected, this, &MainWindow::onFileSelected);

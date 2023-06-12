@@ -6,27 +6,35 @@
 namespace {
     struct JSONStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            return {};
+            // for debugging purposes
+            data.points = {{"1", "1"}, {"2", "0"}, {"3", "3"}, {"4", "1"}};
+            data.chartTitle = "JSON";
+            data.keyAxisTitle = "h";
+            data.valueAxisTitle = "";
+            return true;
         }
     };
 
     struct CSVStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            // for debug purposes
-            //data.points = {{1, 1}, {2, 2}, {3, 3}, {4, 2}};
+            // for debugging purposes
+            data.points = {{"1", "1"}, {"2", "2"}, {"3", "3"}, {"4", "2"}};
+            data.chartTitle = "CSV";
+            data.keyAxisTitle = "ms";
+            data.valueAxisTitle = "";
             return true;
         }
     };
 
     struct SQLiteStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            return {};
+            errorMsg = "SQLite file format is not supported.";
+            return false;
         }
     };
 
     struct NullStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            errorMsg = "NullStrategy: IDataReadingStrategy";
             return false;
         }
     };
