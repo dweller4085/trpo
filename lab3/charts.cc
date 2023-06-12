@@ -8,12 +8,15 @@ namespace {
         }
 
         virtual QChart * createChart(QAbstractSeries * series) override {
-            return {};
+            return new QChart {};
         }
     };
 
     struct BarChart: IChartTemplate {
         virtual QAbstractSeries * createSeries(ChartData const&) override {
+            //auto series = new QBarSeries {};
+            //auto barset = new QBarSet {};
+
             return {};
         }
 
@@ -24,13 +27,14 @@ namespace {
 
     struct LineChart: IChartTemplate {
         virtual QAbstractSeries * createSeries(ChartData const& data) override {
-            auto lineSeries = new QLineSeries {};
-
+            auto series = new QLineSeries {};
+            /*
             for (auto point: data.points) {
-                lineSeries->append({point.time, point.value});
+                series->append({point.time, point.value});
             }
+            */
 
-            return lineSeries;
+            return series;
         }
 
         virtual QChart * createChart(QAbstractSeries * series) override {
@@ -63,10 +67,12 @@ namespace {
 
 QChart * IChartTemplate::build(ChartData const& cd, ColorScheme cs) {
     auto series = this->createSeries(cd);
+    if (!series) return nullptr;
     auto chart = this->createChart(series);
     chart->layout()->setContentsMargins(0, 0, 0, 0);
     chart->setBackgroundRoundness(0);
     chart->legend()->hide();
+    chart->setTitle(cd.chartTitle);
 
     applyColorScheme(chart, cs);
     return chart;

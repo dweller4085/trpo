@@ -15,7 +15,7 @@ public:
 
 signals:
     void dataChanged();
-    void dataInvalidated(QString const&);
+    void dataReadFailed(QString const&);
 
 public slots:
     void onFileSelected(QFileInfo const&);

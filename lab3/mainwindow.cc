@@ -24,7 +24,7 @@ MainWindow::MainWindow() {
     QObject::connect(fileView, &FileView::fileSelected, updateStrategy);
     QObject::connect(fileView, &FileView::fileSelected, this, &MainWindow::onFileSelected);
     QObject::connect(this, &MainWindow::dataChanged, chartView, &ChartView::onDataChanged);
-    QObject::connect(this, &MainWindow::dataInvalidated, chartView, &ChartView::onDataInvalidated);
+    QObject::connect(this, &MainWindow::dataReadFailed, chartView, &ChartView::onDataReadFailed);
 }
 
 void MainWindow::onFileSelected(QFileInfo const& info) {
@@ -34,6 +34,6 @@ void MainWindow::onFileSelected(QFileInfo const& info) {
     if (readingStrategy->read(info.absoluteFilePath(), this->data, errorMsg)) {
         emit MainWindow::dataChanged();
     } else {
-        emit MainWindow::dataInvalidated(errorMsg);
+        emit MainWindow::dataReadFailed(errorMsg);
     }
 }

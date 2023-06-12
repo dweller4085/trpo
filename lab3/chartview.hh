@@ -18,7 +18,7 @@ public:
 
 public slots:
     void onDataChanged();
-    void onDataInvalidated(QString const&);
+    void onDataReadFailed(QString const& errMsg);
 
 private slots:
     void onChartTypeChanged(ChartType);
@@ -29,7 +29,11 @@ private slots:
     void onCbColorSchemeIndexChanged(int index);
 
 private:
+    enum class SharedView {Info, Chart};
+    enum class MessageType {Info, Error};
+
     void drawChart();
+    void displayMessage(QString const& msg, MessageType type);
 
     QChartView *  chartView;
     QComboBox *   cbChartType;
@@ -42,9 +46,4 @@ private:
     ChartType chartType;
 
     ChartData const& data;
-
-    enum class SharedView {
-        Info,
-        Chart,
-    };
 };

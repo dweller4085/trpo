@@ -36,13 +36,15 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
     //cbChartType->setCurrentIndex((int) ChartType::Line);
     updateTemplate(gSupportedChartTypes.first());
 
+
+    infoLabel->setAlignment(Qt::AlignCenter);
+    infoLabel->setFrameStyle(QFrame::StyledPanel);
+
     cbChartType->setDisabled(true);
     cbColorScheme->setDisabled(true);
     pbSaveToPDF->setDisabled(true);
 
-    infoLabel->setAlignment(Qt::AlignCenter);
-    infoLabel->setFrameStyle(QFrame::StyledPanel);
-    infoLabel->setText("Select a file with chart data.");
+    displayMessage("Select a file with chart data.", MessageType::Info);
 
     chartView->setRenderHint(QPainter::Antialiasing);
     chartView->setFrameStyle(QFrame::StyledPanel);
@@ -68,39 +70,59 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
 }
 
 void ChartView::drawChart() {
-    auto chart = gIoCContainer.getService<IChartTemplate>()->build(data, colorScheme);
-    //delete chartView->chart();
-    chartView->setChart(chart);
-    sharedView->setCurrentIndex((int)SharedView::Chart);
     cbChartType->setDisabled(false);
     cbColorScheme->setDisabled(false);
     pbSaveToPDF->setDisabled(false);
+
+    auto chart = gIoCContainer.getService<IChartTemplate>()->build(data, colorScheme);
+
+    if (!chart) {
+        ChartView::displayMessage(
+            QString {} +
+            "Could not build a " +
+            asString(chartType) +
+            " chart with this data.\nPerhaps some other chart type supports this data format?",
+            MessageType::Error
+        );
+
+        cbColorScheme->setDisabled(true);
+        pbSaveToPDF->setDisabled(true);
+
+        return;
+    }
+
+    auto oldChart = chartView->chart();
+    chartView->setChart(chart);
+    delete oldChart;
+
+    sharedView->setCurrentIndex((int)SharedView::Chart);
+
 }
 
 void ChartView::onDataChanged() {
     drawChart();
 }
 
-void ChartView::onDataInvalidated(QString const& errorMsg) {
-    infoLabel->setText(errorMsg);
-    infoLabel->setStyleSheet("QLabel {color: #AA1010;}");
-    sharedView->setCurrentIndex((int)SharedView::Info);
+void ChartView::onDataReadFailed(QString const& errMsg) {
+    displayMessage(errMsg, MessageType::Error);
     cbChartType->setDisabled(true);
     cbColorScheme->setDisabled(true);
     pbSaveToPDF->setDisabled(true);
 }
 
 void ChartView::onChartTypeChanged(ChartType type) {
+    chartType = type;
     updateTemplate(type);
     drawChart();
 }
 
 void ChartView::onColorSchemeChanged(ColorScheme scheme) {
+    colorScheme = scheme;
     applyColorScheme(chartView->chart(), scheme);
 }
 
 void ChartView::onPbSaveToPDFPressed() {
-    auto filePath = QFileDialog::getSaveFileName(nullptr, "Save chart as PDF", {}, "PDF (*.pdf)");
+    auto filePath = QFileDialog::getSaveFileName(nullptr, "Save chart as a PDF document", {}, "PDF (*.pdf)");
     if (filePath.isEmpty()) return;
 
     auto pdfWriter = QPdfWriter {filePath};
@@ -115,4 +137,14 @@ void ChartView::onCbChartTypeIndexChanged(int index) {
 
 void ChartView::onCbColorSchemeIndexChanged(int index) {
     onColorSchemeChanged(gSupportedColorSchemes[index]);
+}
+
+void ChartView::displayMessage(QString const& msg, MessageType type) {
+    switch (type) {
+        case MessageType::Info: infoLabel->setStyleSheet("QLabel {color: #101010;}"); break;
+        case MessageType::Error: infoLabel->setStyleSheet("QLabel {color: #AA1010;}"); break;
+    }
+
+    infoLabel->setText(msg);
+    sharedView->setCurrentIndex((int)SharedView::Info);
 }
