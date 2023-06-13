@@ -95,7 +95,7 @@ void ChartView::drawChart() {
             asString(chartType) +
             " chart with this data.\n" +
             "Hint: " + errMsg +
-            "\nPerhaps some other chart type supports this data format?",
+            "\nPerhaps some other chart type can work with it?",
             MessageType::Error
         );
 

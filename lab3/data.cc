@@ -4,6 +4,7 @@
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QJsonObject>
+#include <QTextStream>
 #include <QJsonDocument>
 
 #include <memory>
@@ -56,10 +57,33 @@ namespace {
 
     struct CSVStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            data.points = {{"1", "1"}, {"2", "2"}, {"3", "3"}, {"4", "2"}};
-            data.chartTitle = "CSV";
-            data.keyAxisTitle = "ms";
-            data.valueAxisTitle = "";
+            errorMsg = "Could not read the CSV file.";
+
+            data.points.clear();
+
+            auto file = QFile {path};
+            file.open(QIODevice::ReadOnly | QIODevice::Text);
+
+            auto stream = QTextStream {&file};
+
+            auto line = stream.readLine().split(',');
+            if (line.isEmpty()) return false;
+
+            data.chartTitle = line.first();
+
+            line = stream.readLine().split(',');
+            if (line.size() != 2) return false;
+
+            data.keyAxisTitle = line.first();
+            data.valueAxisTitle = line.last();
+
+            while (!stream.atEnd()) {
+                auto pair = stream.readLine().split(',');
+                if (pair.size() != 2) return false;
+
+                data.points.push_back({pair.first(), pair.last()});
+            }
+
             return true;
         }
     };
@@ -72,7 +96,7 @@ namespace {
     };
 
     struct NullStrategy: IDataReadingStrategy {
-        virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
+        virtual bool read(QString const&, ChartData&, QString&) override {
             return false;
         }
     };
