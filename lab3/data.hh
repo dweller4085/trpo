@@ -26,4 +26,4 @@ struct IDataReadingStrategy {
 void updateStrategy(QFileInfo const& info);
 QString extension(DataFormat format);
 
-inline static const QVector<DataFormat> gSupportedDataFormats {DataFormat::JSON, DataFormat::CSV};
+inline static const QVector<DataFormat> gSupportedDataFormats {DataFormat::JSON, DataFormat::CSV, DataFormat::SQLITE};

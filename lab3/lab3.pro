@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui widgets charts
+QT       += core gui widgets charts sql
 
 CONFIG += c++17
 
@@ -12,7 +12,7 @@ TARGET = lab3
 TEMPLATE = app
 
 SOURCES += \
-        main.cc \
+    main.cc \
     fileview.cc \
     chartview.cc \
     charts.cc \
@@ -27,5 +27,3 @@ HEADERS += \
     mainwindow.hh \
     data.hh \
     common.hh
-
-INCLUDEPATH += C:/lib/MKB/include

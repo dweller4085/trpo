@@ -1,11 +1,17 @@
 #include "data.hh"
 
 #include <QFile>
+#include <QDateTime>
 #include <QJsonValue>
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QTextStream>
 #include <QJsonDocument>
+
+#include <QSqlError>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <QSqlDatabase>
 
 #include <memory>
 #include "iocc.hh"
@@ -15,7 +21,7 @@ namespace {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
             errorMsg = "Failed to parse this JSON file. Ask the dev what the format should be.";
 
-            data.points.clear();
+            data = ChartData {};
 
             auto file = QFile {path};
             if (!file.exists() || !file.open(QIODevice::ReadOnly)) return false;
@@ -57,9 +63,9 @@ namespace {
 
     struct CSVStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            errorMsg = "Could not read the CSV file.";
+            errorMsg = "Could not read this CSV file.";
 
-            data.points.clear();
+            data = ChartData {};
 
             auto file = QFile {path};
             file.open(QIODevice::ReadOnly | QIODevice::Text);
@@ -90,8 +96,71 @@ namespace {
 
     struct SQLiteStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            errorMsg = "SQLite file format is not supported.";
-            return false;
+            errorMsg = "Something went wrong while trying to read this SQLite file.";
+
+            data = ChartData {};
+
+            auto db = QSqlDatabase::addDatabase("QSQLITE");
+
+            if (!QFile::exists(path)) return false;
+
+            db.setDatabaseName(path);
+
+            if (!db.open()) return false;
+
+            auto table = db.tables().first();
+
+            data.chartTitle = table;
+
+            auto query = QSqlQuery {"select * from " + table + " order by 1 asc", db};
+            //query.exec();
+
+            if (!query.next()) { db.close(); return false; }
+            auto prevDate = query.value(0).toString().split(' ').first().split('.');
+            auto prevValue = query.value(1).toFloat();
+
+            //auto prevDay = prevDate.at(0).toInt();
+            auto prevMonth = prevDate.at(1).toInt();
+            auto prevYear = prevDate.at(2).toInt();
+
+            float averageValue = prevValue;
+            int n = 1;
+
+
+            while (query.next()) {
+                auto currDate = query.value(0).toString().split(' ').first().split('.');
+                auto currValue = query.value(1).toFloat();
+
+                //auto currDay = currDate.at(0).toInt();
+                auto currMonth = currDate.at(1).toInt();
+                auto currYear = currDate.at(2).toInt();
+
+                if (currYear == prevYear && currMonth == prevMonth) {
+                    n += 1;
+                    averageValue += currValue;
+                }
+
+                else {
+                    averageValue /= (float) n;
+                    auto strMonth = QString::number(prevMonth);
+
+                    if (prevMonth < 10) {
+                        strMonth = QString {"0"} + strMonth;
+                    }
+
+                    data.points.push_back({QString::number(prevYear) + "." + strMonth, QString::number(averageValue)});
+
+                    prevYear = currYear;
+                    prevMonth = currMonth;
+                    //prevValue = currValue;
+
+                    averageValue = currValue;
+                    n = 1;
+                }
+            }
+
+            db.close();
+            return true;
         }
     };
 
