@@ -1,13 +1,55 @@
 #include "data.hh"
 
+#include <QFile>
+#include <QJsonValue>
+#include <QJsonArray>
+#include <QJsonObject>
+#include <QJsonDocument>
+
 #include <memory>
 #include "iocc.hh"
 
 namespace {
     struct JSONStrategy: IDataReadingStrategy {
         virtual bool read(QString const& path, ChartData& data, QString& errorMsg) override {
-            data.points = {{"A", "1"}, {"B", "2"}, {"C", "3"}, {"D", "1"}};
-            data.chartTitle = "JSON";
+            errorMsg = "Failed to parse this JSON file. Ask the dev what the format should be.";
+
+            data.points.clear();
+
+            auto file = QFile {path};
+            if (!file.exists() || !file.open(QIODevice::ReadOnly)) return false;
+            auto rawData = file.readAll();
+            file.close();
+
+            auto jsonDocument = QJsonDocument::fromJson(rawData);
+            if (!jsonDocument.isObject()) return false;
+
+            auto const jsonObject = jsonDocument.object();
+
+            if (!(  jsonObject.contains("chartTitle") &&
+                    jsonObject.contains("keyAxisTitle") &&
+                    jsonObject.contains("valueAxisTitle") &&
+                    jsonObject.contains("data"))
+            ) return false;
+
+            data.chartTitle = jsonObject.value("chartTitle").toString();
+            data.keyAxisTitle = jsonObject.value("keyAxisTitle").toString();
+            data.valueAxisTitle = jsonObject.value("valueAxisTitle").toString();
+
+            auto jsonData = jsonObject.value("data");
+            if (!jsonData.isArray()) return false;
+
+            for (auto const item: jsonData.toArray()) {
+                if (!item.isArray()) return false;
+                auto pair = item.toArray();
+
+                if (pair.size() != 2) return false;
+
+                auto key = pair.at(0).toString();
+                auto value = pair.at(1).toString();
+                data.points.push_back({key, value});
+            }
+
             return true;
         }
     };

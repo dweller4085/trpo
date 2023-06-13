@@ -108,7 +108,7 @@ namespace {
     }
 }
 
-bool IChartTemplate::build(QChart * chart, ChartData const& data, ColorScheme colorScheme, QString& errMsg) {
+bool IChartTemplate::setup(QChart * chart, ChartData const& data, ColorScheme colorScheme, QString& errMsg) {
     clearChart(chart);
 
     if (!this->setupChart(chart, data, errMsg)) return false;

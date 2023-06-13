@@ -20,6 +20,7 @@ MainWindow::MainWindow(): QMainWindow {nullptr} {
     setCentralWidget(splitter);
 
     resize(700, 450);
+    setMinimumHeight(450);
 
     QObject::connect(fileView, &FileView::fileSelected, updateStrategy);
     QObject::connect(fileView, &FileView::fileSelected, this, &MainWindow::onFileSelected);

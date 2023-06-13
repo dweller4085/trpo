@@ -88,7 +88,7 @@ void ChartView::drawChart() {
     auto errMsg = QString {};
     auto chartTemplate = gIoCContainer.getService<IChartTemplate>();
 
-    if (!chartTemplate->build(chartView->chart(), data, colorScheme, errMsg)) {
+    if (!chartTemplate->setup(chartView->chart(), data, colorScheme, errMsg)) {
         ChartView::displayMessage(
             QString {} +
             "Could not build a " +

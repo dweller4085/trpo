@@ -10,7 +10,7 @@ enum class ColorScheme { Light, BlueCerulean, BlackAndWhite };
 enum class ChartType { Line, Pie, Scatter };
 
 struct IChartTemplate {
-    bool build (QChart * chart, ChartData const& cd, ColorScheme cs, QString& errMsg);
+    bool setup(QChart * chart, ChartData const& data, ColorScheme colorScheme, QString& errMsg);
 
 protected:
     virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) = 0;
