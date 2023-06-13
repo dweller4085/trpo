@@ -85,6 +85,31 @@ namespace {
         }
     };
 
+    struct BarChart: IChartTemplate {
+        virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) override {
+            auto series = new QBarSeries {};
+
+            for (auto point: data.points) {
+                auto ok = bool {true};
+                auto value {point.value.toFloat(&ok)};
+
+                if (ok) {
+                    auto barSet = new QBarSet {point.key};
+                    barSet->append(value);
+                    series->append(barSet);
+                } else {
+                    errMsg = "Bar chart only supports data of format (string, real).";
+                    return false;
+                }
+            }
+
+            chart->addSeries(series);
+            chart->legend()->show();
+
+            return true;
+        }
+    };
+
     struct NullChart: IChartTemplate {
         virtual bool setupChart(QChart *, ChartData const&, QString&) override {
             return true;
@@ -96,6 +121,7 @@ namespace {
             case ChartType::Pie: return std::make_shared<PieChart>(); break;
             case ChartType::Scatter: return std::make_shared<ScatterChart>(); break;
             case ChartType::Line: return std::make_shared<LineChart>(); break;
+            case ChartType::Bar: return std::make_shared<BarChart>(); break;
             default: return std::make_shared<NullChart>(); break;
         }
     }
@@ -133,6 +159,7 @@ QString asString(ChartType type) {
         case ChartType::Pie: s = "Pie"; break;
         case ChartType::Scatter: s = "Scatter"; break;
         case ChartType::Line: s = "Line"; break;
+        case ChartType::Bar: s = "Bar"; break;
         default: s = ""; break;
     } return s;
 }
