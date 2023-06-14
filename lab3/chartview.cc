@@ -37,6 +37,8 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
     }
 
     updateTemplate(ChartType {0});
+    chartType = ChartType {0};
+    colorScheme = ColorScheme {0};
 
     infoLabel->setAlignment(Qt::AlignCenter);
     infoLabel->setFrameStyle(QFrame::StyledPanel);
