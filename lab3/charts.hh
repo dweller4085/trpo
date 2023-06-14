@@ -6,7 +6,7 @@
 
 #include "data.hh"
 
-enum class ColorScheme { Light, BlueCerulean, BlackAndWhite };
+enum class ColorScheme { Light, Dark, BrownSand, BlackAndWhite };
 enum class ChartType { Line, Pie, Scatter, Bar };
 
 struct IChartTemplate {
@@ -23,4 +23,4 @@ void updateTemplate(ChartType);
 void applyColorScheme(QChart * chart, ColorScheme scheme);
 
 inline static const QVector<ChartType> gSupportedChartTypes {ChartType::Line, ChartType::Pie, ChartType::Bar};
-inline static const QVector<ColorScheme> gSupportedColorSchemes {ColorScheme::Light, ColorScheme::BlueCerulean, ColorScheme::BlackAndWhite};
+inline static const QVector<ColorScheme> gSupportedColorSchemes {ColorScheme::Light, ColorScheme::Dark, ColorScheme::BrownSand, ColorScheme::BlackAndWhite};

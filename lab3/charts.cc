@@ -187,7 +187,8 @@ bool IChartTemplate::setup(QChart * chart, ChartData const& data, ColorScheme co
 QString asString(ColorScheme scheme) {
     QString s; switch (scheme) {
         case ColorScheme::Light: s = "Light"; break;
-        case ColorScheme::BlueCerulean: s = "Blue Cerulean"; break;
+        case ColorScheme::Dark: s = "Dark"; break;
+        case ColorScheme::BrownSand: s = "Brown Sand"; break;
         case ColorScheme::BlackAndWhite: s = "Black & White"; break;
         default: s = ""; break;
     } return s;
@@ -213,8 +214,12 @@ void applyColorScheme(QChart * chart, ColorScheme scheme) {
             chart->setTheme(QChart::ChartThemeLight);
             chart->setGraphicsEffect(nullptr);
         } break;
-        case ColorScheme::BlueCerulean: {
-            chart->setTheme(QChart::ChartThemeBlueCerulean);
+        case ColorScheme::Dark: {
+            chart->setTheme(QChart::ChartThemeDark);
+            chart->setGraphicsEffect(nullptr);
+        } break;
+        case ColorScheme::BrownSand: {
+            chart->setTheme(QChart::ChartThemeBrownSand);
             chart->setGraphicsEffect(nullptr);
         } break;
         case ColorScheme::BlackAndWhite: {
