@@ -49,6 +49,8 @@ void FileView::onPbOpenFolderClicked() {
 void FileView::onFileSelected(QModelIndex const& index) {
     QModelIndex static previousIndex;
 
+    if (model->fileInfo(index).isDir()) return;
+
     if (previousIndex != index) {
         emit FileView::fileSelected(model->fileInfo(index));
         previousIndex = index;

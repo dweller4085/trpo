@@ -1,0 +1,12 @@
+{
+    "chartTitle": "Some folks' height",
+    "keyAxisTitle": "",
+    "valueAxisTitle": "ft",
+    "data": [
+        ["Barbara", "2.0"],
+        ["Liskov", "3.0"],
+        ["Meyer", "1.0"],
+        ["Bob", "2.0"],
+        ["Martin", "4.0"]
+    ]
+}
