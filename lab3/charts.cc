@@ -103,8 +103,14 @@ namespace {
                 }
             }
 
-            chart->addSeries(series);
+            auto valueAxis = new QValueAxis {};
+            valueAxis->setTitleText(data.valueAxisTitle);
+
             chart->legend()->show();
+            chart->addSeries(series);
+            chart->addAxis(valueAxis, Qt::AlignLeft);
+
+            series->attachAxis(valueAxis);
 
             return true;
         }

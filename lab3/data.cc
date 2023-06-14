@@ -112,7 +112,7 @@ namespace {
 
             data.chartTitle = table;
 
-            auto query = QSqlQuery {"select * from " + table + " order by 1 asc", db};
+            auto query = QSqlQuery {"select * from " + table /* + " order by 1 asc"*/};
             //query.exec();
 
             if (!query.next()) { db.close(); return false; }
@@ -125,7 +125,6 @@ namespace {
 
             float averageValue = prevValue;
             int n = 1;
-
 
             while (query.next()) {
                 auto currDate = query.value(0).toString().split(' ').first().split('.');
