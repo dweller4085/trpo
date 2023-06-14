@@ -29,38 +29,6 @@ namespace {
     };
 
 
-    struct ScatterChart: IChartTemplate {
-        virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) override {
-            auto series = new QScatterSeries {};
-            series->setMarkerShape(QScatterSeries::MarkerShapeCircle);
-            series->setMarkerSize(20.0);
-
-            for (auto point: data.points) {
-                bool okx = true;
-                bool oky = true;
-
-                float x = point.key.toFloat(&okx);
-                float y = point.value.toFloat(&oky);
-
-                if (okx && oky) {
-                    series->append({x, y});
-                } else {
-                    errMsg = "Scatter plot only supports data of format (real, real).";
-                    return false;
-                }
-            }
-
-            chart->addSeries(series);
-            chart->createDefaultAxes();
-            chart->axes(Qt::Horizontal).first()->setTitleText(data.keyAxisTitle);
-            chart->axes(Qt::Vertical).first()->setTitleText(data.valueAxisTitle);
-            chart->legend()->hide();
-
-            return true;
-        }
-    };
-
-
     struct LineChart: IChartTemplate {
         virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) override {
             auto series = new QLineSeries {};
@@ -158,7 +126,6 @@ namespace {
     std::shared_ptr<IChartTemplate> templateFor(ChartType type) {
         switch (type) {
             case ChartType::Pie: return std::make_shared<PieChart>(); break;
-            case ChartType::Scatter: return std::make_shared<ScatterChart>(); break;
             case ChartType::Line: return std::make_shared<LineChart>(); break;
             case ChartType::Bar: return std::make_shared<BarChart>(); break;
             default: return std::make_shared<NullChart>(); break;
@@ -197,7 +164,6 @@ QString asString(ColorScheme scheme) {
 QString asString(ChartType type) {
     QString s; switch (type) {
         case ChartType::Pie: s = "Pie"; break;
-        case ChartType::Scatter: s = "Scatter"; break;
         case ChartType::Line: s = "Line"; break;
         case ChartType::Bar: s = "Bar"; break;
         default: s = ""; break;

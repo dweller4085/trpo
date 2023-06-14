@@ -16,7 +16,7 @@ struct ChartData {
     QVector<Point> points;
 };
 
-enum class DataFormat { JSON, CSV, SQLITE };
+enum class DataFormat: int { JSON, CSV, SQLITE, __count };
 
 struct IDataReadingStrategy {
     virtual bool read(QString const& path, ChartData& data, QString& errorMsg) = 0;
@@ -25,5 +25,3 @@ struct IDataReadingStrategy {
 
 void updateStrategy(QFileInfo const& info);
 QString extension(DataFormat format);
-
-inline static const QVector<DataFormat> gSupportedDataFormats {DataFormat::JSON, DataFormat::CSV, DataFormat::SQLITE};

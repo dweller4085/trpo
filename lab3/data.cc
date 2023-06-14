@@ -189,9 +189,9 @@ QString extension(DataFormat format) {
 }
 
 void updateStrategy(QFileInfo const& info) {
-    for (auto format: gSupportedDataFormats) {
-        if (extension(format) == info.completeSuffix()) {
-            gIoCContainer.registerService<IDataReadingStrategy>(strategyFor(format));
+    for (int format = 0; format < (int) DataFormat::__count; format += 1) {
+        if (extension(DataFormat {format}) == info.completeSuffix()) {
+            gIoCContainer.registerService<IDataReadingStrategy>(strategyFor(DataFormat {format}));
         }
     }
 }

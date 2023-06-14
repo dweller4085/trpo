@@ -28,15 +28,15 @@ ChartView::ChartView(QWidget * parent, ChartData const& data): QWidget {parent},
     cbChartType->setMinimumWidth(80);
     cbColorScheme->setMinimumWidth(80);
 
-    for (auto type: gSupportedChartTypes) {
-        cbChartType->addItem(asString(type));
+    for (int type = 0; type < (int) ChartType::__count; type += 1) {
+        cbChartType->addItem(asString(ChartType {type}));
     }
 
-    for (auto scheme: gSupportedColorSchemes) {
-        cbColorScheme->addItem(asString(scheme));
+    for (int scheme = 0; scheme < (int) ColorScheme::__count; scheme += 1) {
+        cbColorScheme->addItem(asString(ColorScheme {scheme}));
     }
 
-    updateTemplate(gSupportedChartTypes.first());
+    updateTemplate(ChartType {0});
 
     infoLabel->setAlignment(Qt::AlignCenter);
     infoLabel->setFrameStyle(QFrame::StyledPanel);
@@ -137,11 +137,11 @@ void ChartView::onPbSaveToPDFPressed() {
 }
 
 void ChartView::onCbChartTypeIndexChanged(int index) {
-    onChartTypeChanged(gSupportedChartTypes[index]);
+    onChartTypeChanged(ChartType {index});
 }
 
 void ChartView::onCbColorSchemeIndexChanged(int index) {
-    onColorSchemeChanged(gSupportedColorSchemes[index]);
+    onColorSchemeChanged(ColorScheme {index});
 }
 
 void ChartView::displayMessage(QString const& msg, MessageType type) {

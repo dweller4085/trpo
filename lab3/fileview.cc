@@ -15,8 +15,8 @@ FileView::FileView(QWidget * parent): QWidget {parent} {
 
     {
         auto filters = QStringList {};
-        for (auto format: gSupportedDataFormats) {
-            filters << "*." + extension(format);
+        for (int format = 0; format < (int) DataFormat::__count; format += 1) {
+            filters << "*." + extension(DataFormat {format});
         } model->setNameFilters(filters);
     }
 
