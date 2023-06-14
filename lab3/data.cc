@@ -100,7 +100,7 @@ namespace {
 
             data = ChartData {};
 
-            auto db = QSqlDatabase::addDatabase("QSQLITE");
+            auto static db = QSqlDatabase::addDatabase("QSQLITE");
 
             if (!QFile::exists(path)) return false;
 

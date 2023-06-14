@@ -22,5 +22,5 @@ QString asString(ChartType type);
 void updateTemplate(ChartType);
 void applyColorScheme(QChart * chart, ColorScheme scheme);
 
-inline static const QVector<ChartType> gSupportedChartTypes {ChartType::Line, ChartType::Pie, ChartType::Scatter, ChartType::Bar};
+inline static const QVector<ChartType> gSupportedChartTypes {ChartType::Line, ChartType::Pie, ChartType::Bar};
 inline static const QVector<ColorScheme> gSupportedColorSchemes {ColorScheme::Light, ColorScheme::BlueCerulean, ColorScheme::BlackAndWhite};

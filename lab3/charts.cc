@@ -1,6 +1,9 @@
 #include "charts.hh"
 #include "iocc.hh"
 
+#include <QDate>
+#include <QDateTime>
+
 namespace {
     struct PieChart: IChartTemplate {
         virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) override {
@@ -24,6 +27,7 @@ namespace {
             return true;
         }
     };
+
 
     struct ScatterChart: IChartTemplate {
         virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) override {
@@ -56,30 +60,59 @@ namespace {
         }
     };
 
+
     struct LineChart: IChartTemplate {
         virtual bool setupChart(QChart * chart, ChartData const& data, QString& errMsg) override {
             auto series = new QLineSeries {};
+
+            bool looksLikeADate = true;
 
             for (auto point: data.points) {
                 bool okx = true;
                 bool oky = true;
 
-                float x = point.key.toFloat(&okx);
-                float y = point.value.toFloat(&oky);
+                float x, y;
+
+                auto date = QDateTime {{QDate::fromString(point.key, "yyyy.MM")}};
+
+                if (looksLikeADate && date.isValid()) {
+                    x = (float) date.toMSecsSinceEpoch();
+                } else {
+                    x = point.key.toFloat(&okx);
+                    looksLikeADate = false;
+                }
+
+                y = point.value.toFloat(&oky);
 
                 if (okx && oky) {
                     series->append({x, y});
                 } else {
-                    errMsg = "Line chart only supports data of format (real, real).";
+                    errMsg = "Line chart only supports data of format (real, real), or (\"yyyy.mm\", real)";
                     return false;
                 }
             }
 
             chart->addSeries(series);
-            chart->createDefaultAxes();
-            chart->axes(Qt::Horizontal).first()->setTitleText(data.keyAxisTitle);
-            chart->axes(Qt::Vertical).first()->setTitleText(data.valueAxisTitle);
             chart->legend()->hide();
+
+            if (looksLikeADate) {
+                auto dateTimeAxis = new QDateTimeAxis {};
+                auto valueAxis = new QValueAxis {};
+
+                dateTimeAxis->setFormat("yyyy.MM");
+                //dateTimeAxis->setTickCount(data.points.length());
+                dateTimeAxis->setTickCount(7);
+
+                chart->addAxis(dateTimeAxis, Qt::AlignBottom);
+                chart->addAxis(valueAxis, Qt::AlignLeft);
+
+                series->attachAxis(dateTimeAxis);
+                series->attachAxis(valueAxis);
+            } else {
+                chart->createDefaultAxes();
+                chart->axes(Qt::Horizontal).first()->setTitleText(data.keyAxisTitle);
+                chart->axes(Qt::Vertical).first()->setTitleText(data.valueAxisTitle);
+            }
 
             return true;
         }
